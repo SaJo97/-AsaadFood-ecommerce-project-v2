@@ -1,0 +1,9 @@
+.env
+node_modules
+anteckningar.txt
+node_modules/
+dist
+dist/
+*.log
+*.mp4
+.mp4

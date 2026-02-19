@@ -1,0 +1,210 @@
+import { useDispatch } from "react-redux";
+import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
+import {
+  addToCart,
+  removeItem,
+  removeOne,
+} from "@/store/cart/shoppingCartSlice";
+import { useLocation } from "react-router";
+
+const CartItem = ({ item }) => {
+  const dispatch = useDispatch();
+  const location = useLocation(); // Get the current location
+  const isCheckout = location.pathname.includes("kassa"); 
+  const weightMetric = item.product.type === "Oliveoil" ? "L" : "kg";
+
+  return (
+    <article
+      itemScope
+      itemType="https://schema.org/Product"
+      aria-label={`Produkt i varukorg: ${item.product.title}`}
+    >
+      {!isCheckout ? (
+        <div className="flex justify-between items-center border rounded p-2">
+          <div className="flex items-center gap-3">
+            <img
+              src={item.product.image}
+              alt={`Produktbild av ${item.product.title}`}
+              className="w-14 h-14 object-contain rounded"
+            />
+
+            <div>
+              <h3 itemProp="name">{item.product.title}</h3>
+              <p className="text-sm text-gray-500">
+                {item.quantity} × {item.product.price} kr
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => dispatch(removeOne(item.product._id))}
+              className="p-1 border rounded hover:bg-gray-100"
+              aria-label={`Minska antal av ${item.product.title}`}
+              title="Minska antal"
+            >
+              <FaMinus className="text-xs" aria-hidden="true" />
+            </button>
+
+            <button
+              onClick={() => dispatch(addToCart(item.product))}
+              className="p-1 border rounded hover:bg-gray-100"
+              aria-label={`Öka antal av ${item.product.title}`}
+              title="Öka antal"
+            >
+              <FaPlus className="text-xs" aria-hidden="true" />
+            </button>
+
+            <button
+              onClick={() => dispatch(removeItem(item.product._id))}
+              className="p-1 text-red-500 hover:text-red-700"
+            >
+              <FaTrash />
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex border border-[#1E5BCC] items-stretch text-sm font-crimsontext lg:text-base">
+          {/* Image */}
+          <div className="flex items-center justify-center flex-[0_0_60px] md:flex-[0_0_80px] p-1 md:p-2">
+            <img
+              src={item.product.image}
+              alt={`Produktbild av ${item.product.title}`}
+              className="max-h-20 object-contain"
+            />
+          </div>
+
+          {/* Product info */}
+          <div className="flex flex-col justify-center gap-1 p-1 md:px-2 flex-1 border-l border-black">
+            <h3 className="break-all font-bold" itemProp="brand">
+              {item.product.brand}
+            </h3>
+            <p className="break-all font-bold" itemProp="name">
+              {item.product.title}
+            </p>
+            <p className="text-gray-500">
+              {item.product.weight} {weightMetric}
+            </p>
+          </div>
+
+          {/* Price (desktop only) */}
+          <div
+            className="hidden md:flex flex-col items-center flex-[0_0_120px] border-l border-black"
+            itemProp="offers"
+            itemScope
+            itemType="https://schema.org/Offer"
+          >
+            <p
+              className="bg-gray-100 w-full text-center py-1 font-bold"
+              aria-label="ordinarie pris"
+            >
+              ORD.PRIS
+            </p>
+            <p className="mt-6 font-bold text-[#1E5BCC]">
+              <span itemProp="price">{item.product.price} kr</span>
+            </p>
+          </div>
+
+          {/* Quantity */}
+          <div className="hidden md:flex flex-col items-center flex-[0_0_120px] border-l border-black">
+            <p
+              className="bg-gray-100 w-full text-center py-1 font-bold"
+              aria-label="Antal"
+            >
+              Antal
+            </p>
+            <div className="flex items-center gap-2 justify-center mt-5 bg-[#D9D9D9] p-1 rounded-full">
+              <button
+                className="cursor-pointer w-5 h-5 rounded-full bg-[#1E5BCC] text-white flex items-center justify-center"
+                aria-label={`Minska antal av ${item.product.title}`}
+                title="Minska antal"
+                onClick={() => dispatch(removeOne(item.product._id))}
+              >
+                <FaMinus aria-hidden="true" />
+              </button>
+              <span
+                className="w-10 md:w-12 h-5
+                    flex items-center justify-center
+                    font-quattrocento font-bold
+                    bg-[#1E5BCC] text-white
+                    rounded-full
+                    tabular-nums"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                {item.quantity}
+              </span>
+              <button
+                className="cursor-pointer w-5 h-5 rounded-full bg-[#1E5BCC] text-white flex items-center justify-center"
+                aria-label={`Öka antal av ${item.product.title}`}
+                title="Öka antal"
+                onClick={() => dispatch(addToCart(item.product))}
+              >
+                <FaPlus aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+
+          {/* Sum */}
+          <div className="flex flex-col items-center flex-[0_0_120px] border-l border-black">
+            <p className="bg-gray-100 w-full text-center py-1 font-bold">
+              Summa
+            </p>
+            <p className="mt-2 text-[#1E5BCC] font-bold md:mt-6">
+              {item.product.price * item.quantity} kr
+            </p>
+            <div
+              className="md:hidden flex items-center gap-2 justify-center
+                  bg-[#D9D9D9]
+                  rounded-full p-1 mt-2"
+            >
+              <button
+                onClick={() => dispatch(removeOne(item.product._id))}
+                className="w-5 h-5 rounded-full bg-[#1E5BCC] text-white flex items-center justify-center"
+                aria-label={`Minska antal av ${item.product.title}`}
+                title="Minska antal"
+              >
+                <FaMinus className="text-xs" aria-hidden="true" />
+              </button>
+
+              <span
+                className="w-10 md:w-12 h-5
+                    flex items-center justify-center
+                    font-quattrocento font-bold
+                    bg-[#1E5BCC] text-white
+                    rounded-full
+                    tabular-nums"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                {item.quantity}
+              </span>
+
+              <button
+                onClick={() => dispatch(addToCart(item.product))}
+                className="w-5 h-5 rounded-full bg-[#1E5BCC] text-white flex items-center justify-center"
+                aria-label={`Öka antal av ${item.product.title}`}
+                title="Öka antal"
+              >
+                <FaPlus className="text-xs" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+
+          {/* Trash */}
+          <div className="flex items-center justify-center flex-[0_0_40px] md:flex-[0_0_50px] border-l border-black">
+            <button
+              className="cursor-pointer text-red-500 hover:text-red-700"
+              aria-label={`Ta bort ${item.product.title} från varukorgen`}
+              title="Ta bort produkt"
+              onClick={() => dispatch(removeItem(item.product._id))}
+            >
+              <FaTrash size={20} aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+      )}
+    </article>
+  );
+};
+export default CartItem;
