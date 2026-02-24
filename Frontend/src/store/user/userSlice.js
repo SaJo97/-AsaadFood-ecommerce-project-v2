@@ -109,6 +109,7 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // FETCH USERS
       .addCase(fetchUsers.pending, (state) => {
         state.loading.fetchUsers = true;
         state.error.fetchUsers = null;
@@ -122,6 +123,7 @@ const userSlice = createSlice({
         state.loading.fetchUsers = false;
         state.error.fetchUsers = action.payload;
       })
+      // FETCH CURRENT USER
       .addCase(fetchCurrentUser.pending, (state) => {
         state.loading.fetchCurrentUser = true;
         state.error.fetchCurrentUser = null;
@@ -135,7 +137,8 @@ const userSlice = createSlice({
         state.loading.fetchCurrentUser = false;
         state.error.fetchCurrentUser = action.payload;
       })
-      .addCase(deleteUser.pending, (state) => {
+      // DELETE USER
+      .addCase(deleteUser.pending, (state, action) => {
         state.loading.delete = true;
         state.error.delete = null;
         // Store the user for potential rollback - maybe remove
@@ -144,7 +147,7 @@ const userSlice = createSlice({
         );
       })
       .addCase(deleteUser.fulfilled, (state, action) => {
-        // Optimistic update: already filtered in pending
+        state.list = state.list.filter((user) => user._id !== action.payload);
         state.loading.delete = false;
         state.error.delete = null;
         state.pendingDelete = null;
@@ -158,7 +161,8 @@ const userSlice = createSlice({
         state.error.delete = action.payload;
         state.pendingDelete = null;
       })
-      .addCase(updateUserRole.pending, (state) => {
+      // UPDATE USER ROLE
+      .addCase(updateUserRole.pending, (state, action) => {
         state.loading.updateUserRole = true;
         state.error.updateUserRole = null;
         // Store the old user for rollback - maybe remove
@@ -167,31 +171,50 @@ const userSlice = createSlice({
         );
       })
       .addCase(updateUserRole.fulfilled, (state, action) => {
+        const updatedUser = action.payload;
+
+        // Update the user in the list
         const index = state.list.findIndex(
-          (user) => user._id === action.payload._id,
+          (user) => user._id === updatedUser._id,
         );
         if (index !== -1) {
-          state.list[index] = action.payload; // Optimistic update
+          state.list[index] = updatedUser;
         }
+
+        // If the updated user is the currently logged-in user, update currentUser too
+        if (state.currentUser && state.currentUser._id === updatedUser._id) {
+          state.currentUser = updatedUser;
+        }
+
         state.loading.updateUserRole = false;
         state.error.updateUserRole = null;
         state.pendingUpdate = null;
       })
       .addCase(updateUserRole.rejected, (state, action) => {
-        // Rollback: Revert to old user
+        // Rollback the list
         if (state.pendingUpdate) {
           const index = state.list.findIndex(
-            (user) => user._id === state.pendingUpdate._id,
+            (u) => u._id === state.pendingUpdate._id,
           );
           if (index !== -1) {
             state.list[index] = state.pendingUpdate;
           }
+
+          // Rollback currentUser if it was updated
+          if (
+            state.currentUser &&
+            state.currentUser._id === state.pendingUpdate._id
+          ) {
+            state.currentUser = state.pendingUpdate;
+          }
         }
+
         state.loading.updateUserRole = false;
-        state.error.updateUserRole = action.payload;
+        state.error.updateUserRole = action.payload || action.error.message;
         state.pendingUpdate = null;
       })
-      .addCase(updateUserInfo.pending, (state) => {
+      // UPDATE USER INFO
+      .addCase(updateUserInfo.pending, (state, action) => {
         state.loading.updateUserInfo = true;
         state.error.updateUserInfo = null;
         // Store the old user for rollback
@@ -227,6 +250,7 @@ const userSlice = createSlice({
         state.error.updateUserInfo = action.payload;
         state.pendingUpdate = null;
       })
+      // LOGOUT
       .addCase(logout.fulfilled, (state) => {
         state.currentUser = null;
         state.list = [];

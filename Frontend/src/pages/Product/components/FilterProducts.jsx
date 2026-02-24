@@ -1,6 +1,6 @@
 const FilterProducts = ({ brands, selectedBrand, onSelectBrand }) => {
   return (
-    <nav aria-label="Product brand filters">
+    <nav aria-label="Produktfilter efter varumärke" role="region">
       {/* Filter heading */}
       <h2 className="underline text-[16px] font-crimsontext font-bold text-center p-2">
         Filter
@@ -8,9 +8,9 @@ const FilterProducts = ({ brands, selectedBrand, onSelectBrand }) => {
 
       {/* Brand buttons */}
       <div
-        className="flex gap-3 overflow-x-auto px-4 py-3"
+        className="flex gap-3 flex-wrap justify-center px-4 py-3"
         role="group"
-        aria-label="Filter products by brand"
+        aria-label="Välj varumärke för att filtrera produkter"
       >
         {brands.map((brand) => {
           const isActive = brand === selectedBrand;
@@ -18,6 +18,7 @@ const FilterProducts = ({ brands, selectedBrand, onSelectBrand }) => {
           return (
             <button
               key={brand}
+              type="button"
               onClick={() => onSelectBrand(brand)}
               className={`
               px-1 whitespace-nowrap text-[16px] md:text-[20px] font-crimsontext
@@ -29,7 +30,7 @@ const FilterProducts = ({ brands, selectedBrand, onSelectBrand }) => {
               }
             `}
               aria-pressed={isActive}
-              aria-label={`Filter by brand: ${brand}${isActive ? ", selected" : ""}`}
+              aria-label={`Filtrera på varumärke: ${brand}${isActive ? ", valt" : ""}`}
             >
               {brand}
             </button>

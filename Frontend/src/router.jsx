@@ -11,6 +11,8 @@ import Register from "./pages/User/Register";
 import Profile from "./pages/User/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminPage from "./pages/Admin/AdminPage";
+import CreateProduct from "./pages/Admin/CreateProduct";
+import UpdateUser from "./pages/Admin/UpdateUser";
 
 export const router = createBrowserRouter([
   {
@@ -75,7 +77,31 @@ export const router = createBrowserRouter([
             <AdminPage />
           </ProtectedRoute>
         )
-      }
+      },
+      {
+        path: "adminpanel/:productId",
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <AdminPage />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: "adminpanel/skapa",
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <CreateProduct />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: "adminpanel/hantera",
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <UpdateUser />
+          </ProtectedRoute>
+        )
+      },
     ],
   },
 ]);

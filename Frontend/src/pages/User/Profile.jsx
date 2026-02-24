@@ -12,16 +12,6 @@ const Profile = () => {
   const { email, role, loading, error } = useSelector((state) => state.auth);
   const { currentUser } = useSelector((state) => state.users);
 
-  const hasDispatched = useRef(false); // Track if checkAuth has been dispatched
-
-  useEffect(() => {
-    // Dispatch checkAuth only once per mount, if not authenticated and not already dispatched
-    if (!hasDispatched.current) {
-      hasDispatched.current = true; // Mark as dispatched
-      dispatch(checkAuth());
-    }
-  }, [dispatch]);
-
   useEffect(() => {
     if (email) {
       dispatch(fetchCurrentUser());
@@ -81,6 +71,10 @@ const Profile = () => {
       </main>
     );
   }
+  const handleNavClick = (callback) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (callback) callback();
+  };
   return (
     <>
       {/* SEO Metadata */}
@@ -137,6 +131,7 @@ const Profile = () => {
                 to="/adminpanel"
                 className="inline-block px-4 py-2 bg-[#1E5BCC] text-white text-lg md:text-[24px] rounded focus:outline focus:outline-offset-2 focus:outline-blue-600"
                 aria-label="Gå till adminpanelen"
+                onClick={() => handleNavClick()}
               >
                 Adminpanel
               </Link>

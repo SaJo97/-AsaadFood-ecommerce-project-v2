@@ -54,7 +54,7 @@ export const login = createAsyncThunk(
         message: "Login successful",
         email: userData.loginEmail,
         role: data.user.role,
-        // token: data.token
+        // token: data.accessToken
       };
     } catch (error) {
       // console.error("Login error:", error.response?.data || error.message);
@@ -97,11 +97,11 @@ export const checkAuth = createAsyncThunk(
   "auth/checkAuth",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await authService.checkAuth();
-      if (response.status === 304 || !response.data || !response.data.email) {
+      const data = await authService.checkAuth();
+      if (!data || !data.email) {
         return rejectWithValue("Cached or invalid response");
       }
-      return { email: response.data.email, role: response.data.role };
+      return { email: data.email, role: data.role };
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || "Not authenticated");
     }

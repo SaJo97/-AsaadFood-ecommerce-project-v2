@@ -5,7 +5,8 @@ export const verifyToken = (req, res, next) => {
   console.log("verifyToken called for:", req.path);
   try {
     // Get the token from the httpOnly cookie
-    const token = req.cookies.jwt;
+    // const token = req.cookies.jwt;
+    const token = req.cookies.accessToken;
     console.log("Token from cookie:", token ? "Present" : "Missing"); 
 
     // Check if the token is present
@@ -18,7 +19,7 @@ export const verifyToken = (req, res, next) => {
 
     // Verify the token using the secret key from environment variables
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
+    // console.log("Decoded access token:", decoded);
     // Attach the decoded user information to the request object
     req.user = decoded.userInfo;  // e.g., { _id, email, role }
     req.userId = decoded.userInfo._id;  
@@ -28,6 +29,7 @@ export const verifyToken = (req, res, next) => {
     // Call the next middleware function in the stack
     next();
   } catch (err) {
+    console.log("JWT VERIFY ERROR:", err.message);
     // Send 401 Unauthorized if token verification fails
     return res.status(401).json({ message: "Not Authenticated" });
   }

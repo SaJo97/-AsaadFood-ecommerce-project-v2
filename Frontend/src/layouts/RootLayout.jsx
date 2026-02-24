@@ -1,12 +1,21 @@
 import { Outlet } from "react-router"
 import Navbar from "../components/Navbar"
 import Footer from "../components/Footer"
-import Providers from "@/components/Providers"
+// import Providers from "@/components/Providers"
+import { checkAuth } from "@/store/auth/authSlice"
+import { useEffect, useRef } from "react"
+import { useDispatch } from "react-redux"
 
 
 const RootLayout = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
+
   return (
-    <Providers>
+    // <Providers>
       <div id="root" className="flex flex-col lg:gap-12.5 md:gap-10 min-h-screen">
         <Navbar />
         
@@ -16,7 +25,7 @@ const RootLayout = () => {
 
         <Footer />
       </div>
-    </Providers>
+    // </Providers>
   )
 }
 export default RootLayout

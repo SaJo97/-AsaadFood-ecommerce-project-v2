@@ -65,7 +65,7 @@ export const getProductById = asyncHandler(async (req, res) => {
 // Controller to update a product
 export const updateProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { title, brand, weight, price, image, description } = req.body; // Destructure request body
+  const { title, brand, weight, price, image, description, type } = req.body; // Destructure request body
 
   console.log("Incoming request body:", req.body);
 
@@ -89,6 +89,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
   if (description) toUpdate.description = description; // Add description to update if provided
   if (brand) toUpdate.brand = brand; // Add brand to update if provided
   if (image) toUpdate.image = image; // Add images to update if provided
+  if (type) toUpdate.type = type; // Add images to update if provided
 
   // Check if there are no changes to update
   if (Object.keys(toUpdate).length === 0) {

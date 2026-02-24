@@ -1,11 +1,4 @@
-import axios from "axios";
-const port = import.meta.env.VITE_PORT;
-const BASE_URL = import.meta.env.MODE === 'development' ? `http://localhost:${port}/` : '/';
-
-const apiClient = axios.create({
-  baseURL: BASE_URL,
-  withCredentials: true,  // Enable sending cookies with requests for better security
-});
+import apiClient from "../apiClient.js";
 
 const getAll = async () => {
   try {
@@ -45,7 +38,7 @@ const update = async (product) => {
 };
 
 const deleteProduct = async (productId) => {
-  if (typeof productId !== 'string') {
+  if (typeof productId !== "string") {
     throw new Error("Invalid product ID");
   }
   await apiClient.delete(`api/product/${productId}`);

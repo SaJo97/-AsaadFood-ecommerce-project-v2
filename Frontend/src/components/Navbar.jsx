@@ -5,17 +5,13 @@ import { NavLink, useLocation } from "react-router";
 import { useSelector } from "react-redux";
 import Dropdown from "./Dropdown";
 import useAuth from "@/hooks/useAuth";
-const Navbar = () => {
-  // Fixa så att när man klickar på länk den börjar i starten av sidan sedan semantik osv sedan vitest
-
+const Navbar = () => {// vitest
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
-
-  const { totalQuantity } = useSelector((state) => state.shoppingCart);
-
-  const [isScrolled, setIsScrolled] = useState(false);
   const navRef = useRef(null);
 
+  const { totalQuantity } = useSelector((state) => state.shoppingCart);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation(); // Get current location
   const isCheckout = location.pathname.includes("kassa"); // Check if on kassa page
   const { isAuthenticated } = useAuth();
@@ -43,7 +39,6 @@ const Navbar = () => {
 
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleKeyDown);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleKeyDown);
@@ -55,14 +50,24 @@ const Navbar = () => {
     setIsProductsOpen(false);
   };
 
+  const handleNavClick = (callback) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (callback) callback();
+  };
+
   return (
-    <nav
+    <header
       className={`fixed bg-white transition-all duration-300 top-0 left-0 w-full z-50  flex flex-col items-center font-cinzel outline outline-[#1E5BCC] ${isScrolled ? "p-2.5 text-base" : "p-3.5 lg:pt-6.25 lg:pb-2.5 text-[18px]"}`}
       ref={navRef}
+      role="banner"
     >
-      <main className="w-full max-w-300 flex justify-between items-center">
+      <nav
+        className="w-full max-w-300 flex justify-between items-center"
+        aria-label="Main navigation"
+      >
+        {/* Logo */}
         <div>
-          <NavLink to="/" onClick={closeAll}>
+          <NavLink to="/" onClick={() => handleNavClick(closeAll)}>
             <img
               src={Logo}
               alt="Asaad Food logo"
@@ -74,13 +79,20 @@ const Navbar = () => {
             />
           </NavLink>
         </div>
+
         {/* Desktop Nav */}
         <div className="hidden lg:flex lg:relative">
-          <ul className="flex gap-2.5 text-[16px] xl:text-[18px] xl:gap-4">
+          <ul
+            className="flex gap-2.5 text-[16px] xl:text-[18px] xl:gap-4"
+            role="menubar"
+          >
             <li className="relative">
               <button
                 onClick={() => setIsProductsOpen((prev) => !prev)}
                 className="flex items-center gap-1 hover:text-gray-600"
+                aria-haspopup="true"
+                aria-expanded={isProductsOpen}
+                aria-label="Visa produktmeny"
               >
                 <span>Produkter</span>
                 <span>
@@ -91,13 +103,25 @@ const Navbar = () => {
               </button>
 
               {isProductsOpen && (
-                <ul className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded shadow-lg z-10 flex flex-col items-center">
-                  <NavLink to="produkt_ris" onClick={closeAll}>
+                <ul
+                  className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded shadow-lg z-10 flex flex-col items-center"
+                  role="menu"
+                  aria-label="Produktkategorier"
+                >
+                  <NavLink
+                    to="produkt_ris"
+                    onClick={() => handleNavClick(closeAll)}
+                    role="menuitem"
+                  >
                     <li className="px-11 py-2 hover:bg-gray-100 cursor-pointer">
                       Ris
                     </li>
                   </NavLink>
-                  <NavLink to="produkt_olivolja" onClick={closeAll}>
+                  <NavLink
+                    to="produkt_olivolja"
+                    onClick={() => handleNavClick(closeAll)}
+                    role="menuitem"
+                  >
                     <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                       Olivolja
                     </li>
@@ -105,57 +129,79 @@ const Navbar = () => {
                 </ul>
               )}
             </li>
-            <li>
-              <NavLink to="om-oss" onClick={closeAll}>
+            <li role="none">
+              <NavLink
+                to="om-oss"
+                onClick={() => handleNavClick(closeAll)}
+                role="menuitem"
+              >
                 Om oss
               </NavLink>
             </li>
-            <li>
-              <NavLink to="kontakta-oss" onClick={closeAll}>
+            <li role="none">
+              <NavLink
+                to="kontakta-oss"
+                onClick={() => handleNavClick(closeAll)}
+                role="menuitem"
+              >
                 Kontakta oss
               </NavLink>
             </li>
-            <li>
+            <li role="none">
               <a
                 href="https://mahmoodrice.com/en/"
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={closeAll}
+                onClick={() => handleNavClick(closeAll)}
+                role="menuitem"
               >
                 Till mahmoodrice.com
               </a>
             </li>
+
             {isAuthenticated ? (
               <>
                 {/* Varukorg */}
-                <li>
+                <li role="none">
                   {totalQuantity > 0 && (
                     <div className="relative">
-                      <div className="z-10 w-4 h-4 absolute left-3.5 -bottom-2 rounded-full flex items-center justify-center pointer-events-none bg-[#D12323] text-xs text-white">
+                      <span className="z-10 w-4 h-4 absolute left-3.5 -bottom-2 rounded-full flex items-center justify-center pointer-events-none bg-[#D12323] text-xs text-white">
                         {totalQuantity}
-                      </div>
+                      </span>
                     </div>
                   )}
                   {/* render Dropdown based on kassa status */}
                   {!isCheckout ? (
-                    <Dropdown>
+                    <Dropdown aria-label="Visa varukorg">
                       <FaShoppingCart className="text-2xl cursor-pointer" />
                     </Dropdown>
                   ) : (
                     // On kassa, show a static cart icon (no dropdown)
-                    <FaShoppingCart className="text-2xl" />
+                    <FaShoppingCart
+                      className="text-2xl"
+                      aria-label="Varukorg"
+                    />
                   )}
                 </li>
                 {/* Auth */}
-                <li>
-                  <NavLink to="/konto" onClick={closeAll}>
+                <li role="none">
+                  <NavLink
+                    to="/konto"
+                    onClick={() => handleNavClick(closeAll)}
+                    role="menuitem"
+                    aria-label="Konto"
+                  >
                     <FaRegUserCircle className="text-2xl" />
                   </NavLink>
                 </li>
               </>
             ) : (
-              <li>
-                <NavLink to="auth/logga-in" onClick={closeAll}>
+              <li role="none">
+                <NavLink
+                  to="auth/logga-in"
+                  onClick={() => handleNavClick(closeAll)}
+                  role="menuitem"
+                >
                   Logga in
                 </NavLink>
               </li>
@@ -167,6 +213,9 @@ const Navbar = () => {
           <button
             onClick={() => setIsMenuOpen((prev) => !prev)}
             className="flex gap-1 outline outline-[#1E5BCC] rounded-full p-1 cursor-pointer"
+            aria-controls="mobile-menu"
+            aria-expanded={isMenuOpen}
+            aria-label="Meny"
           >
             <span className="text-[16px]">Meny</span>
             {/* Hamburger icon */}
@@ -198,7 +247,7 @@ const Navbar = () => {
                   <Dropdown>
                     <FaShoppingCart
                       className="text-2xl cursor-pointer"
-                      onClick={closeAll}
+                      onClick={() => handleNavClick(closeAll)}
                     />
                   </Dropdown>
                 ) : (
@@ -206,27 +255,39 @@ const Navbar = () => {
                 )}
               </li>
               <li>
-                <NavLink to="/konto" onClick={closeAll}>
+                <NavLink to="/konto" onClick={() => handleNavClick(closeAll)}>
                   <FaRegUserCircle className="text-2xl" />
                 </NavLink>
               </li>
             </>
           ) : (
             <li>
-              <NavLink to="auth/logga-in" onClick={closeAll}>
+              <NavLink
+                to="auth/logga-in"
+                onClick={() => handleNavClick(closeAll)}
+              >
                 Logga in
               </NavLink>
             </li>
           )}
         </ul>
-      </main>
+      </nav>
+
       {/* Mobile Dropdown Menu */}
       {isMenuOpen && (
         <div className="lg:hidden w-full max-w-300 mt-4">
-          <ul className="flex flex-col gap-4 items-center">
-            <li className="flex gap-3.5 items-center relative">
+          <ul
+            className="flex flex-col gap-4 items-center"
+            id="mobile-menu"
+            role="menu"
+            aria-label="Mobil navigationsmeny"
+          >
+            <li className="flex gap-3.5 items-center relative" role="none">
               <button
                 onClick={() => setIsProductsOpen((prev) => !prev)}
+                aria-haspopup="true"
+                aria-expanded={isProductsOpen}
+                aria-label="Visa produktmeny"
                 className="flex gap-3.5 items-center cursor-pointer"
               >
                 <span>Produkter</span>
@@ -237,36 +298,63 @@ const Navbar = () => {
                 </span>
               </button>
               {isProductsOpen && (
-                <ul className="absolute top-full left-1 mt-2 bg-white border border-gray-200 rounded shadow-lg z-10 flex flex-col items-center">
-                  <li className="px-11 py-2 hover:bg-gray-100 cursor-pointer">
-                    <NavLink to="produkt_ris" onClick={closeAll}>
+                <ul
+                  className="absolute top-full left-1 mt-2 bg-white border border-gray-200 rounded shadow-lg z-10 flex flex-col items-center"
+                  role="menu"
+                  aria-label="Produktkategorier"
+                >
+                  <li
+                    role="none"
+                    className="px-11 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    <NavLink
+                      to="produkt_ris"
+                      role="menuitem"
+                      onClick={() => handleNavClick(closeAll)}
+                    >
                       Ris
                     </NavLink>
                   </li>
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                    <NavLink to="produkt_olivolja" onClick={closeAll}>
+                  <li
+                    role="none"
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    <NavLink
+                      to="produkt_olivolja"
+                      role="menuitem"
+                      onClick={() => handleNavClick(closeAll)}
+                    >
                       Olivolja
                     </NavLink>
                   </li>
                 </ul>
               )}
             </li>
-            <li>
-              <NavLink to="om-oss" onClick={closeAll}>
+            <li role="none">
+              <NavLink
+                to="om-oss"
+                onClick={() => handleNavClick(closeAll)}
+                role="menuitem"
+              >
                 Om oss
               </NavLink>
             </li>
-            <li>
-              <NavLink to="kontakta-oss" onClick={closeAll}>
+            <li role="none">
+              <NavLink
+                to="kontakta-oss"
+                onClick={() => handleNavClick(closeAll)}
+                role="menuitem"
+              >
                 Kontakta oss
               </NavLink>
             </li>
-            <li>
+            <li role="none">
               <a
                 href="https://mahmoodrice.com/en/"
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={closeAll}
+                onClick={() => handleNavClick(closeAll)}
+                role="menuitem"
               >
                 Till mahmoodrice.com
               </a>
@@ -274,7 +362,7 @@ const Navbar = () => {
           </ul>
         </div>
       )}
-    </nav>
+    </header>
   );
 };
 export default Navbar;

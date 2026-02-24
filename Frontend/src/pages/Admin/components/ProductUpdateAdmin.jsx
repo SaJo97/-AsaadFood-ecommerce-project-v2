@@ -1,116 +1,73 @@
-import { createProduct } from "@/store/products/productSlice";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { updateProduct } from "@/store/products/productSlice";
+import { useState } from "react";
 import { useNavigate } from "react-router";
-
-const CreateProduct = () => {
+const ProductUpdateAdmin = ({ product, onClose }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { products = [] } = useSelector((state) => state.productList);
-  const [error, setError] = useState("");
-  const [formData, setFormData] = useState({
-    title: "",
-    brand: "",
-    weight: "",
-    price: "",
-    image: "",
-    description: "",
-    type: "",
-  });
+  const { loading } = useSelector((state) => state.productList);
 
+  const [formData, setFormData] = useState({
+    title: product?.title || "",
+    brand: product?.brand || "",
+    type: product?.type || "",
+    weight: product?.weight || "",
+    price: product?.price || "",
+    image: product?.image || "",
+    description: product?.description || "",
+  });
   const handleChange = (e) => {
-    setFormData((state) => ({
-      ...state,
-      [e.target.id]: e.target.value,
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "weight" || name === "price" ? Number(value) : value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (
-      formData.title.trim() === "" ||
-      formData.brand.trim() === "" ||
-      formData.weight.trim() === "" ||
-      formData.price.trim() === "" ||
-      formData.image.trim() === "" ||
-      formData.description.trim() === "" ||
-      formData.type.trim() === ""
-    ) {
-      setError("Fyll alla fält");
-      return;
-    }
-    const isNameTaken = products.some(
-      (p) => p.title.toLowerCase() === formData.title.toLocaleLowerCase(),
-    );
-    if (isNameTaken) {
-      setError("Produkten måste ha unik titel");
-      return;
-    }
 
-    const productData = {
+    const updatedProduct = {
       ...formData,
-      price: parseFloat(formData.price),
+      _id: product._id,
     };
-
     try {
-      await dispatch(createProduct(productData)).unwrap();
-      setFormData({
-        title: "",
-        brand: "",
-        weight: "",
-        price: "",
-        image: "",
-        description: "",
-        type: "",
-      });
-      navigate("/adminpanel");
-    } catch (err) {
-      console.log(err);
-      setError(err.response?.data?.message || "Något gick fel!");
+      await dispatch(updateProduct(updatedProduct)).unwrap();
+      onClose();
+      console.log(formData);
+    } catch (error) {
+      console.error("Update failed:", error);
       navigate("/");
     }
   };
-
   return (
-    <div className="w-full max-w-200 mx-auto flex flex-col gap-2 p-3 font-raleway lg:text-[18px]">
-      {/* SEO */}
-      <title>Skapa produkt | Asaad Food Admin</title>
-      <meta
-        name="description"
-        content="Adminpanel: Skapa nya produkter i Asaad Food sortimentet."
-      />
-
+    <div
+      className="w-full max-w-200 mx-auto flex flex-col gap-2 p-3 font-raleway lg:text-[18px]"
+      aria-labelledby={`product-${product._id}-title`}
+      itemScope
+      itemType="https://schema.org/Product"
+    >
       <header>
-        <h1 className="text-center font-crimsontext font-bold text-2xl">
-          Skapa produkt
+        <h1
+          id={`product-${product._id}-title`}
+          itemProp="name"
+          className="text-center font-crimsontext font-bold text-2xl"
+        >
+          Uppdatera produkt
         </h1>
       </header>
 
+      {/* Form product section */}
       <section
-        className="rounded-2xl bg-[#f9f9f9] border"
-        aria-labelledby="create-product-heading"
-        itemScope
-        itemType="https://schema.org/Product"
+        className="rounden-lg rounded-2xl bg-[#f9f9f9] border"
+        aria-label={`Uppdatera produkt: ${product.title}`}
       >
-        <h2 id="create-product-heading" className="sr-only">
-          Formulär för att skapa ny produkt
-        </h2>
+        {/* Product info */}
         <form
           onSubmit={handleSubmit}
           className="flex flex-col p-4 gap-3 w-full"
-          aria-describedby={error ? "form-error" : undefined}
         >
-          {/* Error */}
-          {error && (
-            <p
-              id="form-error"
-              role="alert"
-              className="text-red-500 font-medium text-sm"
-            >
-              {error}
-            </p>
-          )}
-
           {/* Title */}
           <div>
             <label htmlFor="title" className="block font-semibold mb-1">
@@ -119,15 +76,17 @@ const CreateProduct = () => {
             <input
               type="text"
               id="title"
+              name="title"
               value={formData.title}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
               required
               aria-required="true"
+              aria-label="Produkttitel"
             />
           </div>
 
-          {/* Type + Brand */}
+          {/* Typ + Brand*/}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="type" className="block font-semibold mb-1">
@@ -135,18 +94,19 @@ const CreateProduct = () => {
               </label>
               <select
                 id="type"
+                name="type"
                 value={formData.type}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
                 required
                 aria-required="true"
+                aria-label="Produkttyp"
               >
                 <option value="">Välj typ</option>
                 <option value="Rice">Ris</option>
                 <option value="Oliveoil">Olivolja</option>
               </select>
             </div>
-
             <div>
               <label htmlFor="brand" className="block font-semibold mb-1">
                 Märke
@@ -154,16 +114,18 @@ const CreateProduct = () => {
               <input
                 type="text"
                 id="brand"
+                name="brand"
                 value={formData.brand}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
                 required
                 aria-required="true"
+                aria-label="Produktmärke"
               />
             </div>
           </div>
 
-          {/* Weight + Price */}
+          {/* Weight + Price row */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="weight" className="block font-semibold mb-1">
@@ -172,11 +134,14 @@ const CreateProduct = () => {
               <input
                 type="number"
                 id="weight"
+                name="weight"
+                placeholder="kg/L"
                 value={formData.weight}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
                 required
                 aria-required="true"
+                aria-label="Produktvikt"
               />
             </div>
 
@@ -187,16 +152,17 @@ const CreateProduct = () => {
               <input
                 type="number"
                 id="price"
+                name="price"
                 value={formData.price}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
                 required
                 aria-required="true"
+                aria-label="Produktpris"
               />
             </div>
           </div>
-
-          {/* Image */}
+          {/* Product Image */}
           <div>
             <label htmlFor="image" className="block font-semibold mb-1">
               Bild (URL)
@@ -204,15 +170,15 @@ const CreateProduct = () => {
             <input
               type="text"
               id="image"
+              name="image"
               value={formData.image}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
-              placeholder="https://example.com/image.jpg"
               required
               aria-required="true"
+              aria-label="Produktbild URL"
             />
           </div>
-
           {/* Description */}
           <div>
             <label htmlFor="description" className="block font-semibold mb-1">
@@ -220,29 +186,32 @@ const CreateProduct = () => {
             </label>
             <textarea
               id="description"
+              name="description"
               value={formData.description}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none min-h-35"
               required
               aria-required="true"
+              aria-label="Produktbeskrivning"
             />
           </div>
-
           {/* Buttons */}
           <div className="flex gap-2">
             <button
               type="button"
-              onClick={() => navigate("/adminpanel")}
-              className="bg-[#1E5BCC] text-white rounded-md hover:bg-[#1747A3] px-2 py-1 transition-colors duration-150 flex items-center justify-center cursor-pointer w-full border border-black"
+              className="bg-[#1E5BCC] text-white rounded-md hover:bg-[#1747A3] px-2 py-1 transition-colors duration-150 flex items-center justify-center cursor-pointer min-w-15 md:min-w-17.5 lg:min-w-20 w-full border border-black"
+              onClick={onClose}
+              aria-label="Avbryt uppdatering av produkt"
             >
               Avbryt
             </button>
-
             <button
               type="submit"
-              className="bg-[#1E5BCC] text-white rounded-md hover:bg-[#1747A3] px-2 py-1 transition-colors duration-150 flex items-center justify-center cursor-pointer w-full border border-black"
+              disabled={loading.update}
+              className="bg-[#1E5BCC] text-white rounded-md hover:bg-[#1747A3] px-2 py-1 transition-colors duration-150 flex items-center justify-center cursor-pointer min-w-15 md:min-w-17.5 lg:min-w-20 w-full border border-black"
+              aria-label="Spara uppdateringar av produkt"
             >
-              Skapa
+              {loading.update ? "Sparar..." : "Spara"}
             </button>
           </div>
         </form>
@@ -250,4 +219,4 @@ const CreateProduct = () => {
     </div>
   );
 };
-export default CreateProduct;
+export default ProductUpdateAdmin;

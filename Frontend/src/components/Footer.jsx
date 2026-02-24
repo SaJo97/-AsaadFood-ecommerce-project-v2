@@ -1,6 +1,10 @@
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { NavLink } from "react-router";
 const Footer = () => {
+  const handleNavClick = (callback) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (callback) callback();
+  };
   return (
     <footer
       className="bg-[#1E5BCC] text-white p-4 pb-0 flex flex-col items-center font-crimsontext"
@@ -29,6 +33,7 @@ const Footer = () => {
                   to="om-oss"
                   className="hover:underline"
                   aria-label="Läs mer om Asaad Food"
+                  onClick={() => handleNavClick()}
                 >
                   Om oss
                 </NavLink>
@@ -38,6 +43,7 @@ const Footer = () => {
                   to="kontakta-oss"
                   className="hover:underline"
                   aria-label="Kontakta Asaad Food"
+                  onClick={() => handleNavClick()}
                 >
                   Kontakta oss
                 </NavLink>
