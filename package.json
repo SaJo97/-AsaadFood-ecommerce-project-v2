@@ -1,0 +1,22 @@
+{
+  "name": "asaadfood-ecommerce-project-v2",
+  "version": "1.0.0",
+  "description": "mern javascript ecommerce",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm i --prefix backend && npm i --prefix frontend && npm run build --prefix frontend",
+    "start": "npm start --prefix backend",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SaJo97/-AsaadFood-ecommerce-project-v2.git"
+  },
+  "keywords": [],
+  "author": "SaJo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SaJo97/-AsaadFood-ecommerce-project-v2/issues"
+  },
+  "homepage": "https://github.com/SaJo97/-AsaadFood-ecommerce-project-v2#readme"
+}

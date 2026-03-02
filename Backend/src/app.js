@@ -34,7 +34,7 @@ if(process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../frontend/dist')))
   
   // For all other routes, send the 'index.html' file to handle client-side routing
-  app.get('*', (req, res) => { // * instead of /
+  app.get((req, res) => {
     res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'))
   })
 }

@@ -13,6 +13,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminPage from "./pages/Admin/AdminPage";
 import CreateProduct from "./pages/Admin/CreateProduct";
 import UpdateUser from "./pages/Admin/UpdateUser";
+import NotFound from "./components/NotFound";
 
 export const router = createBrowserRouter([
   {
@@ -102,6 +103,10 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         )
       },
+      {
+        path: "*",
+        element: <NotFound />
+      }
     ],
   },
 ]);

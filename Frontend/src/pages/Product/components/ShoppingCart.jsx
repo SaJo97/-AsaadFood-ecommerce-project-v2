@@ -39,13 +39,13 @@ const ShoppingCart = ({ setIsOpen, isCheckoutPage }) => {
       .then((data) => {
         // console.log("Order created successfully:", data);
         dispatch(clearCart()); // Clear the cart after successful order
-        setModalMessage("Beställning skapades!");
+        setModalMessage(`Beställning skapades! Visma order #: ${data.vismaResponse?.salesOrderNumber || "N/A"}`);
         setShowModal(true);
       })
       .catch((error) => {
         console.error("Failed to create order:", error);
         setModalMessage(
-          "Misslyckades med att skapa beställningen. Försök igen",
+          `Misslyckades med att skapa beställning i Visma.` // (${error.message || ""})
         );
         setShowModal(true);
       });

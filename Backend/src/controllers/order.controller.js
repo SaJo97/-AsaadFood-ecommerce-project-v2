@@ -1,6 +1,8 @@
 import asyncHandler from "express-async-handler";
 import Product from "../models/product.model.js";
 import Order from "../models/order.model.js";
+import User from "../models/user.model.js";
+import axios from "axios"
 
 export const createOrder = asyncHandler(async (req, res) => {
   const { products } = req.body;
@@ -16,8 +18,16 @@ export const createOrder = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Products array is required");
   }
+
+  // Fetch user
+  const user = await User.findById(req.userId);
+  if (!user) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+
   // Get product information based on product IDs
-  const productIds = products.map((p) => p.productId).filter((id) => id); // Filter out invalid IDs
+  const productIds = products.map((p) => p.productId).filter((id) => id); // Filter out invalid IDs 
   const productDetails = await Product.find({
     _id: { $in: productIds },
   });
@@ -27,7 +37,6 @@ export const createOrder = asyncHandler(async (req, res) => {
   }
 
   let totalPrice = 0; // Initialize total price
-
   // Calculate total price for the order
   for (const item of products) {
     const product = productDetails.find(
@@ -52,11 +61,76 @@ export const createOrder = asyncHandler(async (req, res) => {
   // Create a new order with the calculated total price
   const order = await Order.create({
     userId: req.userId,
+    userInfo: {
+      name: `${user.contactPerson.firstName} ${user.contactPerson.lastName}`,
+      email: user.invoiceEmail,
+      company: {
+        name: user.company.name,
+        orgNumber: user.company.orgNumber,
+        address: user.company.address,
+      },
+    },
     products,
     totalPrice,
   });
+  // Prepare Visma payload
+  const vismaPayload = {
+    customer: {
+      name: `${order.userInfo.name} - (${user.company.name})`,
+      email: order.userInfo.email,
+      organisationNumber: order.userInfo.company.orgNumber,
+      address: order.userInfo.company.address,
+    },
+    orderRows: products.map((item) => {
+      const product = productDetails.find(
+        (p) => p._id.toString() === item.productId.toString()
+      );
+      return {
+        description: product.title,
+        quantity: item.quantity,
+        unitPrice: product.price,
+      };
+    }),
+  };
 
-  res.status(201).json(order);
+  try {
+    // Get Visma token
+    const tokenResponse = await axios.post(
+      "https://integration.visma.net/API/controller/api/v1/token",
+      {
+        client_id: process.env.VISMA_CLIENT_ID,
+        client_secret: process.env.VISMA_CLIENT_SECRET,
+        grant_type: "client_credentials",
+      }
+    );
+
+    const accessToken = tokenResponse.data.acces_token;
+
+    // Send order to Visma
+    const vismaResponse = await axios.post(
+      "https://integration.visma.net/API/controller/api/v1/salesorder",
+      vismaPayload,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    res.status(201).json({
+      message: "Order skapad lokalt och skickad till Visma.",
+      order,
+      vismaData: vismaResponse.data,
+    });
+  } catch (error) {
+    console.error("Visma API error:", error.response?.data || error);
+    res.status(500).json({
+      message: "Order skapad lokalt men kunde inte skickas till Visma.",
+      order,
+      vismaError: error.response?.data || error.message,
+    });
+  }
 });
 
 // Controller to get the order history for a user

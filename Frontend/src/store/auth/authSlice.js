@@ -124,7 +124,7 @@ const initialState = {
     login: false,
     logout: false,
     forgot: false,
-    checkAuth: false
+    checkAuth: false,
   },
   message: null,
   success: false,

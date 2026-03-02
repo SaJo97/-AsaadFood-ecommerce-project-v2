@@ -52,6 +52,7 @@ const orderSlice = createSlice({
   initialState: {
     currentOrder: null,
     orders: [],
+    vismaResponse: null,
     error: {
       create: null,
       fetch: null,
@@ -71,13 +72,15 @@ const orderSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createOrder.pending, (state) => {
-        state.loading.create = true; // Set loading to true when the request is pending
+        state.loading.create = true;
+        state.error.create = null;
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.currentOrder = action.payload.order; // Store the created order
         state.orders.unshift(action.payload); // optimistic update
-        state.error.create = null; // Clear any previous errors
+        state.vismaResponse = action.payload.vismaData;
         state.loading.create = false; // Set loading to false
+        state.error.create = null; // Clear any previous errors
       })
       .addCase(createOrder.rejected, (state, action) => {
         if (state.orders.length > 0) { // rollback optimistic update - maybe remove later

@@ -7,6 +7,19 @@ const orderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    userInfo: {
+      name: String,
+      email: String,
+      company: {
+        name: String,
+        orgNumber: String,
+        address: {
+          street: String,
+          postalCode: String,
+          city: String,
+        },
+      },
+    },
     products: [
       {
         productId: {
