@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts } from "@/store/products/productSlice";
 import FilterProducts from "./components/FilterProducts";
 import ProductDetail from "./components/ProductDetail";
-import { addToCart } from "@/store/cart/shoppingCartSlice";
 import useProductModal from "@/hooks/useProductModal";
 import Modale from "@/components/Modale";
 import mahmoodAD from "@/assets/AsaadFoodv3.mp4";
@@ -46,10 +45,6 @@ const RiceProducts = () => {
   Object.values(groupedByBrand ?? {}).forEach((products) =>
     products.sort((a, b) => a.weight - b.weight),
   );
-
-  const handleAddToCart = (product) => {
-    dispatch(addToCart(product));
-  };
 
   const { selectedProduct, openProduct, closeProduct } = useProductModal(
     products,
@@ -146,7 +141,6 @@ const RiceProducts = () => {
                       <ProductCard
                         product={product}
                         onOpen={() => openProduct(product._id)}
-                        onAddToCart={() => handleAddToCart(product)}
                       />
                     </article>
                   ))}

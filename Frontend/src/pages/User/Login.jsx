@@ -25,22 +25,24 @@ const Login = () => {
           >
             Logga in på ditt konto
           </h1>
-          {/* Login form */}
-          <div className="text-[18px] font-raleway md:text-[20px] lg:text-[24px]">
-            <FormLogin />
-          </div>
-          {/* Link to register page */}
-          <div className="flex flex-col items-center text-[18px] font-raleway md:text-[20px] lg:text-[24px]">
-            <p>Har du inget konto?</p>
-            <Link to="/auth/registrera">
-              <button
-                className="hover:underline cursor-pointer hover:text-[#1E5BCC]"
-                aria-label="Registrera nytt konto"
-              >
-                Registrera
-              </button>
-            </Link>
-          </div>
+          <section className="border-2 p-4 rounded flex flex-col gap-10">
+            {/* Login form */}
+            <div className="text-[18px] font-raleway md:text-[20px] lg:text-[24px]">
+              <FormLogin />
+            </div>
+            {/* Link to register page */}
+            <div className="flex flex-col items-center text-[18px] font-raleway md:text-[20px] lg:text-[24px]">
+              <p>Har du inget konto?</p>
+              <Link to="/auth/registrera">
+                <button
+                  className="hover:underline cursor-pointer hover:text-[#1E5BCC]"
+                  aria-label="Registrera nytt konto"
+                >
+                  Registrera
+                </button>
+              </Link>
+            </div>
+          </section>
         </div>
       </main>
     </>

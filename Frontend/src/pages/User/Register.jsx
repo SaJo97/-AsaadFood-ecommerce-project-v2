@@ -25,22 +25,24 @@ const Register = () => {
           >
             Skapa konto
           </h1>
-          {/* Registration form */}
-          <div className="text-[18px] font-raleway md:text-[20px] lg:text-[24px]">
-            <FormRegister />
-          </div>
-          {/* Link to login page */}
-          <div className="flex flex-col items-center text-[18px] font-raleway md:text-[20px] lg:text-[24px]">
-            <p>Har du redan ett konto?</p>
-            <Link to="/auth/logga-in">
-              <button
-                className="hover:underline cursor-pointer hover:text-[#1E5BCC]"
-                aria-label="Logga in på ditt konto"
-              >
-                Logga in
-              </button>
-            </Link>
-          </div>
+          <section className="border-2 p-4 rounded flex flex-col gap-10">
+            {/* Registration form */}
+            <div className="text-[18px] font-raleway md:text-[20px] lg:text-[24px]">
+              <FormRegister />
+            </div>
+            {/* Link to login page */}
+            <div className="flex flex-col items-center text-[18px] font-raleway md:text-[20px] lg:text-[24px]">
+              <p>Har du redan ett konto?</p>
+              <Link to="/auth/logga-in">
+                <button
+                  className="hover:underline cursor-pointer hover:text-[#1E5BCC]"
+                  aria-label="Logga in på ditt konto"
+                >
+                  Logga in
+                </button>
+              </Link>
+            </div>
+          </section>
         </div>
       </main>
     </>

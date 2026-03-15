@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 import { getAllProducts } from "@/store/products/productSlice";
 import ProductCard from "./components/ProductCard";
 import FilterProducts from "./components/FilterProducts";
-import { addToCart } from "@/store/cart/shoppingCartSlice";
 import useProductModal from "@/hooks/useProductModal";
 import Modale from "@/components/Modale";
 import ProductDetail from "./components/ProductDetail";
@@ -48,10 +47,6 @@ const OliveoilProducts = () => {
   Object.values(groupedByBrand ?? {}).forEach((products) =>
     products.sort((a, b) => a.weight - b.weight),
   );
-
-  const handleAddToCart = (product) => {
-    dispatch(addToCart(product));
-  };
 
   const { selectedProduct, openProduct, closeProduct } = useProductModal(
     products,
@@ -123,7 +118,10 @@ const OliveoilProducts = () => {
         </section>
 
         {/* Product listing */}
-        <section className="w-full max-w-220" aria-label="oliveoil-products-heading">
+        <section
+          className="w-full max-w-220"
+          aria-label="oliveoil-products-heading"
+        >
           {Object.keys(groupedByBrand).length > 0 ? (
             Object.entries(groupedByBrand ?? {}).map(([brand, products]) => (
               <section
@@ -148,7 +146,6 @@ const OliveoilProducts = () => {
                       <ProductCard
                         product={product}
                         onOpen={() => openProduct(product._id)}
-                        onAddToCart={() => handleAddToCart(product)}
                       />
                     </article>
                   ))}

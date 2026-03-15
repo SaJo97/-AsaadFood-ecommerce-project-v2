@@ -5,7 +5,15 @@ const productSchema = new mongoose.Schema(
     title: { type: String, required: true, unique: true },
     brand: { type: String, required: true },
     weight: { type: Number, required: true },
-    price: { type: Number, required: true },
+    // price: { type: Number, required: true },
+    price: {
+      unitPrice: { type: Number, required: true }, // styckpris
+      palletPrice: { type: Number, required: true }, // pallpris
+    },
+    packaging: {
+      boxesPerPallet: { type: Number, default: 54 },
+      maxBoxWeight: { type: Number, default: 18 },
+    },
     image: { type: String, required: true },
     description: { type: String, required: true },
     type: { type: String, required: true },

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
-import { createPortal } from "react-dom"
+import { createPortal } from "react-dom";
 
-const Modale = ({onClose, children}) => {
+const Modale = ({ onClose, children }) => {
   const modalRef = useRef(null);
 
   // Focus management (critical for INP + accessibility)
@@ -9,7 +9,7 @@ const Modale = ({onClose, children}) => {
     const previouslyFocused = document.activeElement;
 
     const focusable = modalRef.current?.querySelector(
-      'button, [href], input, textarea, select, [tabindex]:not([tabindex="-1"])'
+      'button, [href], input, textarea, select, [tabindex]:not([tabindex="-1"])',
     );
     focusable?.focus();
 
@@ -46,7 +46,7 @@ const Modale = ({onClose, children}) => {
       {/* Modal content */}
       <div
         ref={modalRef}
-        className="relative z-10  max-w-220 bg-white shadow-2xl"
+        className="relative z-10  max-w-220 bg-white shadow-2xl max-h-[90vh]"
       >
         <button
           onClick={onClose}
@@ -56,10 +56,10 @@ const Modale = ({onClose, children}) => {
           &times;
         </button>
 
-        {children}
+        <div className="overflow-y-auto">{children}</div>
       </div>
     </div>,
-    document.getElementById("message-modal")
+    document.getElementById("message-modal"),
   );
-}
-export default Modale
+};
+export default Modale;

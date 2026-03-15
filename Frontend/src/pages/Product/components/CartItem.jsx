@@ -10,8 +10,9 @@ import { useLocation } from "react-router";
 const CartItem = ({ item }) => {
   const dispatch = useDispatch();
   const location = useLocation(); // Get the current location
-  const isCheckout = location.pathname.includes("kassa"); 
+  const isCheckout = location.pathname.includes("kassa");
   const weightMetric = item.product.type === "Oliveoil" ? "L" : "kg";
+  const priceType = item.priceType;
 
   return (
     <article
@@ -31,15 +32,17 @@ const CartItem = ({ item }) => {
             <div>
               <h3 itemProp="name">{item.product.title}</h3>
               <p className="text-sm text-gray-500">
-                {item.quantity} × {item.product.price} kr
+                {item.quantity} × {item.price} kr
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             <button
-              onClick={() => dispatch(removeOne(item.product._id))}
-              className="p-1 border rounded hover:bg-gray-100"
+              onClick={() =>
+                dispatch(removeOne({ productId: item.product._id, priceType }))
+              }
+              className="p-1 border rounded hover:bg-gray-100 cursor-pointer"
               aria-label={`Minska antal av ${item.product.title}`}
               title="Minska antal"
             >
@@ -47,8 +50,10 @@ const CartItem = ({ item }) => {
             </button>
 
             <button
-              onClick={() => dispatch(addToCart(item.product))}
-              className="p-1 border rounded hover:bg-gray-100"
+              onClick={() =>
+                dispatch(addToCart({ product: item.product, priceType }))
+              }
+              className="p-1 border rounded hover:bg-gray-100 cursor-pointer"
               aria-label={`Öka antal av ${item.product.title}`}
               title="Öka antal"
             >
@@ -56,8 +61,10 @@ const CartItem = ({ item }) => {
             </button>
 
             <button
-              onClick={() => dispatch(removeItem(item.product._id))}
-              className="p-1 text-red-500 hover:text-red-700"
+              onClick={() =>
+                dispatch(removeItem({ productId: item.product._id, priceType }))
+              }
+              className="p-1 text-red-500 hover:text-red-700 cursor-pointer"
             >
               <FaTrash />
             </button>
@@ -101,7 +108,7 @@ const CartItem = ({ item }) => {
               ORD.PRIS
             </p>
             <p className="mt-6 font-bold text-[#1E5BCC]">
-              <span itemProp="price">{item.product.price} kr</span>
+              <span itemProp="price">{item.price} kr</span>
             </p>
           </div>
 
@@ -113,12 +120,21 @@ const CartItem = ({ item }) => {
             >
               Antal
             </p>
+            <div>
+              <div>
+                {priceType == "pallet" ? <span>Pall</span> : <span>Styck</span>}
+              </div>
+            </div>
             <div className="flex items-center gap-2 justify-center mt-5 bg-[#D9D9D9] p-1 rounded-full">
               <button
                 className="cursor-pointer w-5 h-5 rounded-full bg-[#1E5BCC] text-white flex items-center justify-center"
                 aria-label={`Minska antal av ${item.product.title}`}
                 title="Minska antal"
-                onClick={() => dispatch(removeOne(item.product._id))}
+                onClick={() =>
+                  dispatch(
+                    removeOne({ productId: item.product._id, priceType }),
+                  )
+                }
               >
                 <FaMinus aria-hidden="true" />
               </button>
@@ -138,7 +154,9 @@ const CartItem = ({ item }) => {
                 className="cursor-pointer w-5 h-5 rounded-full bg-[#1E5BCC] text-white flex items-center justify-center"
                 aria-label={`Öka antal av ${item.product.title}`}
                 title="Öka antal"
-                onClick={() => dispatch(addToCart(item.product))}
+                onClick={() =>
+                  dispatch(addToCart({ product: item.product, priceType }))
+                }
               >
                 <FaPlus aria-hidden="true" />
               </button>
@@ -151,15 +169,22 @@ const CartItem = ({ item }) => {
               Summa
             </p>
             <p className="mt-2 text-[#1E5BCC] font-bold md:mt-6">
-              {item.product.price * item.quantity} kr
+              {item.price * item.quantity} kr
             </p>
+            <div className="md:hidden">
+              {priceType == "pallet" ? <span>Pall</span> : <span>Styck</span>}
+            </div>
             <div
               className="md:hidden flex items-center gap-2 justify-center
                   bg-[#D9D9D9]
                   rounded-full p-1 mt-2"
             >
               <button
-                onClick={() => dispatch(removeOne(item.product._id))}
+                onClick={() =>
+                  dispatch(
+                    removeOne({ productId: item.product._id, priceType }),
+                  )
+                }
                 className="w-5 h-5 rounded-full bg-[#1E5BCC] text-white flex items-center justify-center"
                 aria-label={`Minska antal av ${item.product.title}`}
                 title="Minska antal"
@@ -181,7 +206,9 @@ const CartItem = ({ item }) => {
               </span>
 
               <button
-                onClick={() => dispatch(addToCart(item.product))}
+                onClick={() =>
+                  dispatch(addToCart({ product: item.product, priceType }))
+                }
                 className="w-5 h-5 rounded-full bg-[#1E5BCC] text-white flex items-center justify-center"
                 aria-label={`Öka antal av ${item.product.title}`}
                 title="Öka antal"
@@ -197,7 +224,9 @@ const CartItem = ({ item }) => {
               className="cursor-pointer text-red-500 hover:text-red-700"
               aria-label={`Ta bort ${item.product.title} från varukorgen`}
               title="Ta bort produkt"
-              onClick={() => dispatch(removeItem(item.product._id))}
+              onClick={() =>
+                dispatch(removeItem({ productId: item.product._id, priceType }))
+              }
             >
               <FaTrash size={20} aria-hidden="true" />
             </button>

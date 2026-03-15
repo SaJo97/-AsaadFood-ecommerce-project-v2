@@ -21,7 +21,10 @@ const ProductUpdateAdmin = ({ product, onClose }) => {
 
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "weight" || name === "price" ? Number(value) : value,
+      [name]:
+        name === "weight" || name === "unitPrice" || name === "palletPrice"
+          ? Number(value)
+          : value,
     }));
   };
 
@@ -30,6 +33,10 @@ const ProductUpdateAdmin = ({ product, onClose }) => {
 
     const updatedProduct = {
       ...formData,
+      price: {
+        unitPrice: formData.unitPrice,
+        palletPrice: formData.palletPrice,
+      },
       _id: product._id,
     };
     try {
@@ -43,7 +50,7 @@ const ProductUpdateAdmin = ({ product, onClose }) => {
   };
   return (
     <div
-      className="w-full max-w-200 mx-auto flex flex-col gap-2 p-3 font-raleway lg:text-[18px]"
+      className="w-full max-w-225 mx-auto flex flex-col gap-2 p-3 font-raleway lg:text-[17px] max-h-[90vh] overflow-y-auto"
       aria-labelledby={`product-${product._id}-title`}
       itemScope
       itemType="https://schema.org/Product"
@@ -125,40 +132,62 @@ const ProductUpdateAdmin = ({ product, onClose }) => {
             </div>
           </div>
 
-          {/* Weight + Price row */}
-          <div className="grid grid-cols-2 gap-4">
+          {/* Weight */}
+          <div>
+            <label htmlFor="weight" className="block font-semibold mb-1">
+              Vikt (kg/L)
+            </label>
+            <input
+              type="number"
+              id="weight"
+              name="weight"
+              placeholder="kg/L"
+              value={formData.weight}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
+              required
+              aria-required="true"
+              aria-label="Produktvikt"
+            />
+          </div>
+
+          {/*Unit Price + Pallet Price */}
+          <div className="grid grid-cols-2 gap-4 ">
             <div>
-              <label htmlFor="weight" className="block font-semibold mb-1">
-                Vikt (kg/L)
+              <label htmlFor="unitPrice" className="block font-semibold mb-1">
+                Styckpris (kr)
               </label>
               <input
                 type="number"
-                id="weight"
-                name="weight"
-                placeholder="kg/L"
-                value={formData.weight}
+                id="unitPrice"
+                name="unitPrice"
+                placeholder="Styckpris"
+                value={formData.unitPrice ?? formData.price?.unitPrice ?? ""}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
                 required
                 aria-required="true"
-                aria-label="Produktvikt"
+                aria-label="Styckpris"
               />
             </div>
 
             <div>
-              <label htmlFor="price" className="block font-semibold mb-1">
-                Pris (kr)
+              <label htmlFor="palletPrice" className="block font-semibold mb-1">
+                Pallpris (kr)
               </label>
               <input
                 type="number"
-                id="price"
-                name="price"
-                value={formData.price}
+                id="palletPrice"
+                name="palletPrice"
+                placeholder="Pallpris"
+                value={
+                  formData.palletPrice ?? formData.price?.palletPrice ?? ""
+                }
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
                 required
                 aria-required="true"
-                aria-label="Produktpris"
+                aria-label="Pallpris"
               />
             </div>
           </div>

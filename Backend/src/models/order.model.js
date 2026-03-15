@@ -28,6 +28,11 @@ const orderSchema = new mongoose.Schema(
           required: true,
         },
         quantity: { type: Number, required: true },
+        priceType: {
+          type: String,
+          enum: ["unit", "pallet"],
+          required: true,
+        },
       },
     ],
     totalPrice: { type: Number, required: true },

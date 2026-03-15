@@ -7,7 +7,10 @@ const initialState = {
 };
 
 const getTotalPrice = (cart) => {
-  return cart.reduce((total, item) => total + (item.product?.price || 0) * (item.quantity || 0), 0);
+  return cart.reduce(
+    (total, item) => total + (item.price || 0) * (item.quantity || 0),
+    0,
+  );
 };
 
 const getTotalQuantity = (cart) => {
@@ -19,52 +22,70 @@ export const shoppingCartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action) => {
-      const product = action.payload;
-      if (!product || !product._id || typeof product.price !== 'number' || product.price < 0) return; // Guard clause for invalid payload
+      const { product, priceType } = action.payload;
+      if (!product || !product._id || product.price < 0) return; // Guard clause for invalid payload
+
+      const price =
+        priceType === "pallet"
+          ? product.price.palletPrice
+          : product.price.unitPrice;
 
       const item = state.cart.find(
-        (cartItem) => cartItem.product._id === action.payload._id
+        (cartItem) =>
+          cartItem.productId === product._id &&
+          cartItem.priceType === priceType,
       );
 
       if (item) {
         item.quantity = Math.max(1, item.quantity + 1); // Ensure quantity stays positive
       } else {
-        state.cart = [
-          ...state.cart,
-          { product, quantity: 1 },
-        ];
+        state.cart.push({
+          productId: product._id,
+          product,
+          priceType,
+          price,
+          quantity: 1,
+        });
       }
 
       state.totalPrice = getTotalPrice(state.cart);
       state.totalQuantity = getTotalQuantity(state.cart);
     },
     removeOne: (state, action) => {
-      const productId = action.payload;
+      const { productId, priceType } = action.payload;
       if (!productId) return;
 
       const item = state.cart.find(
-        (cartItem) => cartItem.product._id === productId
+        (cartItem) =>
+          cartItem.productId === productId && cartItem.priceType === priceType,
       );
+      if (!item) return;
 
-      if (item) {
-        if (item.quantity <= 1) {
-          state.cart = state.cart.filter(
-            (cartItem) => cartItem.product._id !== productId
-          );
-        } else {
-          item.quantity = Math.max(0, item.quantity - 1); // Prevent negative
-        }
+      if (item.quantity <= 1) {
+        state.cart = state.cart.filter(
+          (cartItem) =>
+            !(
+              cartItem.productId === productId &&
+              cartItem.priceType === priceType
+            ),
+        );
+      } else {
+        item.quantity = Math.max(0, item.quantity - 1); // Prevent negative
       }
 
       state.totalPrice = getTotalPrice(state.cart);
       state.totalQuantity = getTotalQuantity(state.cart);
     },
     removeItem: (state, action) => {
-      const productId = action.payload;
+       const { productId, priceType } = action.payload;
       if (!productId) return;
 
       state.cart = state.cart.filter(
-        (item) => item.product._id !== productId
+        (item) =>
+          !(
+            item.productId === productId &&
+            item.priceType === priceType
+          ),
       );
 
       state.totalPrice = getTotalPrice(state.cart);

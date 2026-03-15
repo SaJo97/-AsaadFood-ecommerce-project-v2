@@ -12,7 +12,7 @@ const ShoppingCart = ({ setIsOpen, isCheckoutPage }) => {
   );
   const dispatch = useDispatch();
   const location = useLocation(); // Get the current location
-  const isCheckout = location.pathname.includes("kassa"); 
+  const isCheckout = location.pathname.includes("kassa");
 
   const [modalMessage, setModalMessage] = useState(""); // State for modal message
   const [showModal, setShowModal] = useState(false); // State for modal visibility
@@ -30,6 +30,7 @@ const ShoppingCart = ({ setIsOpen, isCheckoutPage }) => {
       products: cart.map((item) => ({
         productId: item.product._id,
         quantity: item.quantity,
+        priceType: item.priceType,
       })),
     };
 
@@ -39,13 +40,15 @@ const ShoppingCart = ({ setIsOpen, isCheckoutPage }) => {
       .then((data) => {
         // console.log("Order created successfully:", data);
         dispatch(clearCart()); // Clear the cart after successful order
-        setModalMessage(`Beställning skapades! Visma order #: ${data.vismaResponse?.salesOrderNumber || "N/A"}`);
+        setModalMessage(
+          `Beställning skapades! Visma order #: ${data.vismaResponse?.salesOrderNumber || "N/A"}`,
+        );
         setShowModal(true);
       })
       .catch((error) => {
         console.error("Failed to create order:", error);
         setModalMessage(
-          `Misslyckades med att skapa beställning i Visma.` // (${error.message || ""})
+          `Misslyckades med att skapa beställning i Visma.`, // (${error.message || ""})
         );
         setShowModal(true);
       });
@@ -80,16 +83,20 @@ const ShoppingCart = ({ setIsOpen, isCheckoutPage }) => {
       )}
 
       {cart.length > 0 && (
-        <ul
-          className={isCheckout ? "flex flex-col md:gap-6 gap-3" : "space-y-3"}
-          aria-label="Produkter i varukorgen"
-        >
-          {cart.map((item) => (
-            <li key={item.product._id}>
-              <CartItem item={item} />
-            </li>
-          ))}
-        </ul>
+        <div className={isCheckout ? "" : "max-h-[50vh] overflow-y-auto"}>
+          <ul
+            className={
+              isCheckout ? "flex flex-col md:gap-6 gap-3" : "space-y-3"
+            }
+            aria-label="Produkter i varukorgen"
+          >
+            {cart.map((item) => (
+              <li key={`${item.productId}-${item.priceType}`}>
+                <CartItem item={item} />
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
 
       <section

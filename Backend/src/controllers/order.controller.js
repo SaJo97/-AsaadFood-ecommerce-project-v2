@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 import Product from "../models/product.model.js";
 import Order from "../models/order.model.js";
 import User from "../models/user.model.js";
-import axios from "axios"
+import axios from "axios";
 
 export const createOrder = asyncHandler(async (req, res) => {
   const { products } = req.body;
@@ -27,14 +27,11 @@ export const createOrder = asyncHandler(async (req, res) => {
   }
 
   // Get product information based on product IDs
-  const productIds = products.map((p) => p.productId).filter((id) => id); // Filter out invalid IDs 
+  const productIds = products.map((p) => p.productId).filter((id) => id); // Filter out invalid IDs
+
   const productDetails = await Product.find({
-    _id: { $in: productIds },
+    _id: { $in: products.map((p) => p.productId) },
   });
-  if (productDetails.length !== products.length) {
-    res.status(400);
-    throw new Error("One or more products are invalid");
-  }
 
   let totalPrice = 0; // Initialize total price
   // Calculate total price for the order
@@ -43,12 +40,22 @@ export const createOrder = asyncHandler(async (req, res) => {
       (p) => p._id.toString() === item.productId.toString(),
     );
 
-    if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
-      res.status(400);
-      throw new Error("Invalid product quantity");
+    if (!product) {
+      return res
+        .status(400)
+        .json({ message: `Produkt saknas: ${item.productId}` });
     }
 
-    totalPrice += product.price * item.quantity;
+    if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
+      return res.status(400).json({ message: "Ogiltigt antal" });
+    }
+
+    const price =
+      item.priceType === "pallet"
+        ? product.price.palletPrice
+        : product.price.unitPrice;
+
+    totalPrice += price * item.quantity;
   }
 
   // Ensure total price is valid
@@ -83,12 +90,16 @@ export const createOrder = asyncHandler(async (req, res) => {
     },
     orderRows: products.map((item) => {
       const product = productDetails.find(
-        (p) => p._id.toString() === item.productId.toString()
+        (p) => p._id.toString() === item.productId.toString(),
       );
+      const unitPrice =
+        item.priceType === "pallet"
+          ? product.price.palletPrice
+          : product.price.unitPrice;
       return {
-        description: product.title,
+        description: `${product.title} (${item.priceType})`,
         quantity: item.quantity,
-        unitPrice: product.price,
+        unitPrice,
       };
     }),
   };
@@ -101,7 +112,7 @@ export const createOrder = asyncHandler(async (req, res) => {
         client_id: process.env.VISMA_CLIENT_ID,
         client_secret: process.env.VISMA_CLIENT_SECRET,
         grant_type: "client_credentials",
-      }
+      },
     );
 
     const accessToken = tokenResponse.data.acces_token;
@@ -115,7 +126,7 @@ export const createOrder = asyncHandler(async (req, res) => {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     res.status(201).json({

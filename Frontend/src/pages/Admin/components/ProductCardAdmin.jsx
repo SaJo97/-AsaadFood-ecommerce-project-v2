@@ -68,16 +68,19 @@ const ProductCardAdmin = ({ product, onOpen }) => {
         </p>
 
         {/* Price */}
-        <p
+        <div
           className="text-base lg:text-lg font-bold"
-          aria-label={`Price: ${product.price} kronor`}
+          aria-label={`Price: ${product.unitPrice ?? product.price?.unitPrice ?? 0} kronor`}
           itemProp="offers"
           itemScope
           itemType="https://schema.org/Offer"
         >
           <span itemProp="priceCurrency" content="SEK" />
-          <span itemProp="price">{product.price}</span> kr
-        </p>
+          <div className="flex flex-col" itemProp="price">
+            <span>Styckpris: {product.price?.unitPrice} kr</span>
+            <span>Pallpris: {product.price?.palletPrice} kr</span>
+          </div>
+        </div>
       </div>
 
       <div

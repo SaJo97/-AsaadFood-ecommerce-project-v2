@@ -3,15 +3,34 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import useAuth from "@/hooks/useAuth";
+import { useState } from "react";
 const ProductDetail = ({ product, onClose }) => {
   const { cart } = useSelector((state) => state.shoppingCart);
+  const [priceType, setPriceType] = useState("unit");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const weightMetric = product.type === "Oliveoil" ? "L" : "kg";
 
-  const cartItem = cart.find((item) => item.product._id === product._id);
+  const cartItem = cart.find(
+    (item) => item.product._id === product._id && item.priceType === priceType,
+  );
   const quantity = cartItem?.quantity ?? 0;
+  const displayPrice =
+    priceType === "pallet"
+      ? product.price.palletPrice
+      : product.price.unitPrice;
+
+  const boxesPerPallet = product.packaging.boxesPerPallet ?? 0;
+  const weight = product.weight ?? 0;
+  const unitsPerBox = Math.floor(product.packaging.maxBoxWeight / weight);
+
+  const unitsPerPallet = unitsPerBox * boxesPerPallet;
+  const boxWeight = weight * unitsPerBox;
+  const palletWeight = boxWeight * boxesPerPallet;
+  const palletpriceunit = Math.floor(
+    product.price.palletPrice / unitsPerPallet,
+  );
 
   return (
     <div
@@ -60,6 +79,52 @@ const ProductDetail = ({ product, onClose }) => {
               {product.weight} {weightMetric}
             </p>
 
+            <div className="flex gap-5 font-roboto md:text-base text-[12px]">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPriceType("unit");
+                }}
+                className={`px-2 py-1 rounded-md border transition-colors duration-200 ${
+                  priceType === "unit"
+                    ? "bg-[#1E5BCC] text-white border-[#1E5BCC]"
+                    : "bg-white text-[#1E5BCC] border-[#1E5BCC] hover:bg-[#E0E7FF]"
+                }`}
+              >
+                Styckpris
+              </button>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPriceType("pallet");
+                }}
+                className={`px-2 py-1 rounded-md border transition-colors duration-200 ${
+                  priceType === "pallet"
+                    ? "bg-[#1E5BCC] text-white border-[#1E5BCC]"
+                    : "bg-white text-[#1E5BCC] border-[#1E5BCC] hover:bg-[#E0E7FF]"
+                }`}
+              >
+                Pallpris
+              </button>
+            </div>
+            <div className="flex gap-2 text-sm md:text-base flex-col">
+              <div className="flex flex-col md:flex-row gap-2">
+                <p>
+                  1 kartong: {unitsPerBox} st ({boxWeight}
+                  {weightMetric})
+                </p>
+                <p>1 pall: {boxesPerPallet} kartonger </p>
+              </div>
+              <div className="flex flex-col md:flex-row gap-2">
+                <p>
+                  Totalt per pall: {unitsPerPallet} st ({palletWeight}
+                  {weightMetric})
+                </p>
+                <p>Pallpris - styck: {palletpriceunit} kr</p>
+              </div>
+            </div>
+
             {/* Price */}
             <p
               itemProp="offers"
@@ -69,7 +134,7 @@ const ProductDetail = ({ product, onClose }) => {
             >
               <span className="sr-only">Pris:</span>
               <span itemProp="priceCurrency" content="SEK" />
-              <span itemProp="price">{product.price}</span> kr
+              <span itemProp="price">{displayPrice}</span> kr
             </p>
           </header>
 
@@ -87,7 +152,7 @@ const ProductDetail = ({ product, onClose }) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   if (isAuthenticated) {
-                    dispatch(addToCart(product)); // Only add if authenticated
+                    dispatch(addToCart({ product, priceType })); // Only add if authenticated
                   } else {
                     navigate("/auth/logga-in"); // Redirect to login if not authenticated
                   }
@@ -104,11 +169,12 @@ const ProductDetail = ({ product, onClose }) => {
                 aria-atomic="true"
               >
                 <button
-                  // onClick={() => dispatch(removeOne(product._id))}
                   onClick={(e) => {
                     e.stopPropagation();
                     if (isAuthenticated) {
-                      dispatch(removeOne(product._id));
+                      dispatch(
+                        removeOne({ productId: product._id, priceType }),
+                      );
                     } else {
                       navigate("/auth/logga-in"); // Redirect to login if not authenticated
                     }
@@ -129,11 +195,10 @@ const ProductDetail = ({ product, onClose }) => {
                 <button
                   type="button"
                   aria-label={`Öka antal ${product.title} i varukorgen`}
-                  // onClick={() => dispatch(addToCart(product))}
                   onClick={(e) => {
                     e.stopPropagation();
                     if (isAuthenticated) {
-                      dispatch(addToCart(product));
+                      dispatch(addToCart({ product, priceType }));
                     } else {
                       navigate("/auth/logga-in"); // Redirect to login if not authenticated
                     }

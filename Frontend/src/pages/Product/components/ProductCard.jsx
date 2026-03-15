@@ -1,11 +1,13 @@
 import useAuth from "@/hooks/useAuth";
 import { addToCart, removeOne } from "@/store/cart/shoppingCartSlice";
+import { useState } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
-const ProductCard = ({ product, onOpen, onAddToCart }) => {
+const ProductCard = ({ product, onOpen }) => {
   const { cart } = useSelector((state) => state.shoppingCart);
+  const [priceType, setPriceType] = useState("unit");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
@@ -13,8 +15,15 @@ const ProductCard = ({ product, onOpen, onAddToCart }) => {
   // Decide metric based on product type
   const weightMetric = product.type === "Oliveoil" ? "L" : "kg";
 
-  const cartItem = cart.find((item) => item.product._id === product._id);
+  // const cartItem = cart.find((item) => item.product._id === product._id);
+  const cartItem = cart.find(
+    (item) => item.product._id === product._id && item.priceType === priceType,
+  );
   const quantity = cartItem?.quantity ?? 0;
+  const displayPrice =
+    priceType === "pallet"
+      ? product.price.palletPrice
+      : product.price.unitPrice;
 
   return (
     <article
@@ -23,10 +32,11 @@ const ProductCard = ({ product, onOpen, onAddToCart }) => {
       itemScope
       itemType="https://schema.org/Product"
     >
-      <button
+      <div
         className="text-left cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1E5BCC]"
         onClick={onOpen}
-        type="button"
+        role="button"
+        tabIndex={0}
         aria-label={`Öppna detaljer för ${product.title}`}
       >
         {/* Image */}
@@ -49,38 +59,67 @@ const ProductCard = ({ product, onOpen, onAddToCart }) => {
             {product.brand}
           </p>
         </header>
+      </div>
+      {/* Product detail */}
+      <div className="flex flex-col flex-1 py-0.5 px-2 gap-1">
+        {/* Title */}
+        <h3
+          className="text-sm lg:text-base font-semibold leading-tight line-clamp-2"
+          aria-label={`Product name: ${product.title}`}
+          id={`product-${product._id}-title`}
+        >
+          {product.title}
+        </h3>
 
-        {/* Product detail */}
-        <div className="flex flex-col flex-1 py-0.5 px-2 gap-1">
-          {/* Title */}
-          <h3
-            className="text-sm lg:text-base font-semibold leading-tight line-clamp-2"
-            aria-label={`Product name: ${product.title}`}
-            id={`product-${product._id}-title`}
-          >
-            {product.title}
-          </h3>
+        {/* Weight */}
+        <p
+          className="text-xs lg:text-sm text-[#696969]"
+          aria-label={`Weight: ${product.weight} ${weightMetric}`}
+        >
+          {product.weight} {weightMetric}
+        </p>
 
-          {/* Weight */}
-          <p
-            className="text-xs lg:text-sm text-[#696969]"
-            aria-label={`Weight: ${product.weight} ${weightMetric}`}
+        <div className="flex justify-center gap-5 font-roboto md:text-base text-[12px]">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setPriceType("unit");
+            }}
+            className={`px-2 py-1 rounded-md border transition-colors duration-200 ${
+              priceType === "unit"
+                ? "bg-[#1E5BCC] text-white border-[#1E5BCC]"
+                : "bg-white text-[#1E5BCC] border-[#1E5BCC] hover:bg-[#E0E7FF]"
+            }`}
           >
-            {product.weight} {weightMetric}
-          </p>
+            Styckpris
+          </button>
 
-          {/* Price */}
-          <p
-            className="text-base lg:text-lg font-bold"
-            aria-label={`Price: ${product.price} kronor`}
-            itemProp="offers"
-            itemType="https://schema.org/Offer"
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setPriceType("pallet");
+            }}
+            className={`px-2 py-1 rounded-md border transition-colors duration-200 ${
+              priceType === "pallet"
+                ? "bg-[#1E5BCC] text-white border-[#1E5BCC]"
+                : "bg-white text-[#1E5BCC] border-[#1E5BCC] hover:bg-[#E0E7FF]"
+            }`}
           >
-            <span itemProp="priceCurrency" content="SEK" />
-            <span itemProp="price">{product.price}</span> kr
-          </p>
+            Pallpris
+          </button>
         </div>
-      </button>
+
+        {/* Price */}
+        <p
+          className="text-base lg:text-lg font-bold"
+          aria-label={`Price: ${displayPrice} kronor`}
+          itemProp="offers"
+          itemType="https://schema.org/Offer"
+        >
+          <span itemProp="priceCurrency" content="SEK" />
+          <span itemProp="price">{displayPrice}</span> kr
+        </p>
+      </div>
 
       {/* ADD TO CART */}
       <div
@@ -95,7 +134,8 @@ const ProductCard = ({ product, onOpen, onAddToCart }) => {
             onClick={(e) => {
               e.stopPropagation();
               if (isAuthenticated) {
-                onAddToCart(product);
+                // onAddToCart(product);
+                dispatch(addToCart({ product, priceType }));
               } else {
                 navigate("/auth/logga-in"); // Redirect to login if not authenticated
               }
@@ -124,7 +164,7 @@ const ProductCard = ({ product, onOpen, onAddToCart }) => {
               onClick={(e) => {
                 e.stopPropagation();
                 if (isAuthenticated) {
-                  dispatch(removeOne(product._id));
+                  dispatch(removeOne({ productId: product._id, priceType }));
                 } else {
                   navigate("/auth/logga-in"); // Redirect to login if not authenticated
                 }
@@ -155,7 +195,7 @@ const ProductCard = ({ product, onOpen, onAddToCart }) => {
               onClick={(e) => {
                 e.stopPropagation();
                 if (isAuthenticated) {
-                  dispatch(addToCart(product));
+                  dispatch(addToCart({ product, priceType }));
                 } else {
                   navigate("/auth/logga-in"); // Redirect to login if not authenticated
                 }

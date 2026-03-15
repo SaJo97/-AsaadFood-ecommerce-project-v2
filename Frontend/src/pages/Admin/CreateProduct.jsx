@@ -12,7 +12,8 @@ const CreateProduct = () => {
     title: "",
     brand: "",
     weight: "",
-    price: "",
+    unitPrice: "",
+    palletPrice: "",
     image: "",
     description: "",
     type: "",
@@ -31,7 +32,8 @@ const CreateProduct = () => {
       formData.title.trim() === "" ||
       formData.brand.trim() === "" ||
       formData.weight.trim() === "" ||
-      formData.price.trim() === "" ||
+      formData.unitPrice.trim() === "" ||
+      formData.palletPrice.trim() === "" ||
       formData.image.trim() === "" ||
       formData.description.trim() === "" ||
       formData.type.trim() === ""
@@ -49,7 +51,11 @@ const CreateProduct = () => {
 
     const productData = {
       ...formData,
-      price: parseFloat(formData.price),
+      weight: parseFloat(formData.weight),
+      price: {
+        unitPrice: parseFloat(formData.unitPrice),
+        palletPrice: parseFloat(formData.palletPrice),
+      },
     };
 
     try {
@@ -58,7 +64,8 @@ const CreateProduct = () => {
         title: "",
         brand: "",
         weight: "",
-        price: "",
+        unitPrice: "",
+        palletPrice: "",
         image: "",
         description: "",
         type: "",
@@ -163,16 +170,31 @@ const CreateProduct = () => {
             </div>
           </div>
 
-          {/* Weight + Price */}
+          {/* Weight */}
+          <div>
+            <label htmlFor="weight" className="block font-semibold mb-1">
+              Vikt (kg/L)
+            </label>
+            <input
+              type="number"
+              id="weight"
+              value={formData.weight}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
+              required
+              aria-required="true"
+            />
+          </div>
+          {/* Prices */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label htmlFor="weight" className="block font-semibold mb-1">
-                Vikt (kg/L)
+              <label htmlFor="unitPrice" className="block font-semibold mb-1">
+                Styckpris (kr)
               </label>
               <input
                 type="number"
-                id="weight"
-                value={formData.weight}
+                id="unitPrice"
+                value={formData.unitPrice}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
                 required
@@ -181,13 +203,13 @@ const CreateProduct = () => {
             </div>
 
             <div>
-              <label htmlFor="price" className="block font-semibold mb-1">
-                Pris (kr)
+              <label htmlFor="palletPrice" className="block font-semibold mb-1">
+                Pallpris (kr)
               </label>
               <input
                 type="number"
-                id="price"
-                value={formData.price}
+                id="palletPrice"
+                value={formData.palletPrice}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
                 required

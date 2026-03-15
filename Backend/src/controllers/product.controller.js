@@ -7,24 +7,40 @@ export const createNewProduct = asyncHandler(async (req, res) => {
   const { title, brand, weight, price, image, description, type } = req.body;
 
   //check if all required files are provided
-  if (!title || !price || !description || !brand || !weight || !image || !type) {
-    return res
-      .status(400)
-      .json({
-        message:
-          "All field (title, brand, weight, price, image, description, type) is required",
-      });
+  if (
+    !title ||
+    !price?.unitPrice ||
+    !price?.palletPrice ||
+    !description ||
+    !brand ||
+    !weight ||
+    !image ||
+    !type
+  ) {
+    return res.status(400).json({
+      message:
+        "All field (title, brand, weight, price.unitPrice, price.palletPrice, image, description, type) is required",
+    });
   }
+  const boxesPerPallet = 54;
+  const maxBoxWeight = 18;
+
+  req.body.packaging = {
+    boxesPerPallet,
+    maxBoxWeight,
+  };
   try {
     //create new product in the database
     const newProduct = await Product.create(req.body);
     res.status(201).json(newProduct);
   } catch (error) {
-    if(error instanceof mongoose.Error.ValidationError){
-      return res.status(400).json({ message: "Validation error", errors: error.errors})
+    if (error instanceof mongoose.Error.ValidationError) {
+      return res
+        .status(400)
+        .json({ message: "Validation error", errors: error.errors });
     }
-    console.error(error)
-    res.status(500).json({ message: "Error when creating product"})
+    console.error(error);
+    res.status(500).json({ message: "Error when creating product" });
   }
 });
 
@@ -76,7 +92,10 @@ export const updateProduct = asyncHandler(async (req, res) => {
 
   // Check if the product title is unique
   if (title) {
-    const existingProduct = await Product.findOne({ title: title, _id: { $ne: id } }); // Find a product with the same title but different ID
+    const existingProduct = await Product.findOne({
+      title: title,
+      _id: { $ne: id },
+    }); // Find a product with the same title but different ID
     if (existingProduct) {
       return res.status(400).json({ message: "Product title must be unique." });
     }
@@ -84,16 +103,17 @@ export const updateProduct = asyncHandler(async (req, res) => {
 
   const toUpdate = {}; // Object to hold fields to update
   if (title) toUpdate.title = title; // Add title to update if provided
-  if (price) toUpdate.price = price; // Add price to update if provided
-  if (weight) toUpdate.weight = weight; // Add price to update if provided
+  if (price?.unitPrice) toUpdate["price.unitPrice"] = price.unitPrice; // Add unitprice to update if provided
+  if (price?.palletPrice) toUpdate["price.palletPrice"] = price.palletPrice; // Add palletprice to update if provided
+  if (weight) toUpdate.weight = weight; // Add weight to update if provided
   if (description) toUpdate.description = description; // Add description to update if provided
   if (brand) toUpdate.brand = brand; // Add brand to update if provided
   if (image) toUpdate.image = image; // Add images to update if provided
-  if (type) toUpdate.type = type; // Add images to update if provided
+  if (type) toUpdate.type = type; // Add type to update if provided
 
   // Check if there are no changes to update
   if (Object.keys(toUpdate).length === 0) {
-    return res.status(400).json({ message: "No changes provided" });  // return to prevent further execution
+    return res.status(400).json({ message: "No changes provided" }); // return to prevent further execution
   }
 
   try {
@@ -133,6 +153,8 @@ export const deleteProduct = asyncHandler(async (req, res) => {
     res.sendStatus(204);
   } catch (error) {
     console.error("Error deleting product2:", error); // Log the error
-    res.status(500).json({ message: "An error occurred while deleting the product." });
+    res
+      .status(500)
+      .json({ message: "An error occurred while deleting the product." });
   }
 });
