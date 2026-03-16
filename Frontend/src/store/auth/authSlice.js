@@ -5,7 +5,7 @@ export const register = createAsyncThunk(
   "auth/register",
   async (userData, { rejectWithValue }) => {
     try {
-      console.log("Registering with data", userData);
+      // console.log("Registering with data", userData);
       const data = await authService.registerUser(userData);
       // console.log("Registration successful", data);
       // Removed token storage—backend sets httpOnly cookie

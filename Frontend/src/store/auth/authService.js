@@ -6,7 +6,7 @@ const registerUser = async (userData) => {
     startSilentRefresh();
     return res.data;
   } catch (error) {
-    console.log("error");
+    // console.log("error");
     throw error;
   }
 };
@@ -63,9 +63,9 @@ const startSilentRefresh = () => {
   const refreshFn = async () => {
     try {
       await apiClient.post("/api/auth/refresh");
-      console.log("Silent refresh success");
+      // console.log("Silent refresh success");
     } catch (err) {
-      console.log("Silent refresh failed");
+      // console.log("Silent refresh failed");
       await logoutUser(); // logout if refresh fails
     } finally {
       // Schedule next refresh

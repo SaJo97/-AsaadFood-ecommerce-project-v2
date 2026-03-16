@@ -60,13 +60,14 @@ const ProductCard = ({ product, onOpen }) => {
           </p>
         </header>
       </div>
+
       {/* Product detail */}
       <div className="flex flex-col flex-1 py-0.5 px-2 gap-1">
         {/* Title */}
         <h3
           className="text-sm lg:text-base font-semibold leading-tight line-clamp-2"
-          aria-label={`Product name: ${product.title}`}
           id={`product-${product._id}-title`}
+          itemProp="name"
         >
           {product.title}
         </h3>
@@ -79,12 +80,19 @@ const ProductCard = ({ product, onOpen }) => {
           {product.weight} {weightMetric}
         </p>
 
-        <div className="flex justify-center gap-5 font-roboto md:text-base text-[12px]">
+        {/* Price type selection */}
+        <div
+          className="flex justify-center gap-5 font-roboto md:text-base text-[12px]"
+          role="group"
+          aria-label="Välj pris typ"
+        >
           <button
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
               setPriceType("unit");
             }}
+            aria-pressed={priceType === "unit"}
             className={`px-2 py-1 rounded-md border transition-colors duration-200 ${
               priceType === "unit"
                 ? "bg-[#1E5BCC] text-white border-[#1E5BCC]"
@@ -95,10 +103,12 @@ const ProductCard = ({ product, onOpen }) => {
           </button>
 
           <button
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
               setPriceType("pallet");
             }}
+            aria-pressed={priceType === "pallet"}
             className={`px-2 py-1 rounded-md border transition-colors duration-200 ${
               priceType === "pallet"
                 ? "bg-[#1E5BCC] text-white border-[#1E5BCC]"
@@ -114,9 +124,10 @@ const ProductCard = ({ product, onOpen }) => {
           className="text-base lg:text-lg font-bold"
           aria-label={`Price: ${displayPrice} kronor`}
           itemProp="offers"
+          itemScope
           itemType="https://schema.org/Offer"
         >
-          <span itemProp="priceCurrency" content="SEK" />
+          <meta itemProp="priceCurrency" content="SEK" />
           <span itemProp="price">{displayPrice}</span> kr
         </p>
       </div>
@@ -134,7 +145,6 @@ const ProductCard = ({ product, onOpen }) => {
             onClick={(e) => {
               e.stopPropagation();
               if (isAuthenticated) {
-                // onAddToCart(product);
                 dispatch(addToCart({ product, priceType }));
               } else {
                 navigate("/auth/logga-in"); // Redirect to login if not authenticated
@@ -149,6 +159,8 @@ const ProductCard = ({ product, onOpen }) => {
           <div
             aria-live="polite"
             aria-atomic="true"
+            role="group"
+            aria-label={`Antal i varukorg för ${product.title}`}
             className="
                   flex items-center justify-center
                   gap-3 md:gap-5
@@ -160,7 +172,6 @@ const ProductCard = ({ product, onOpen }) => {
             <button
               type="button"
               aria-label={`Minska antal ${product.title}`}
-              // onClick={() => dispatch(removeOne(product._id))}
               onClick={(e) => {
                 e.stopPropagation();
                 if (isAuthenticated) {
@@ -171,11 +182,11 @@ const ProductCard = ({ product, onOpen }) => {
               }}
               className="w-5 h-5 rounded-full bg-[#1E5BCC] text-white flex items-center justify-center"
             >
-              <FaMinus size={11} />
+              <FaMinus size={11} aria-hidden="true" />
             </button>
 
             <span
-              aria-label={`Antal i varukorg: ${quantity}`}
+              aria-label={`Antal: ${quantity}`}
               className="
                     w-10 md:w-12 h-5
                     flex items-center justify-center
@@ -191,7 +202,6 @@ const ProductCard = ({ product, onOpen }) => {
             <button
               type="button"
               aria-label={`Öka antal ${product.title}`}
-              // onClick={() => dispatch(addToCart(product))}
               onClick={(e) => {
                 e.stopPropagation();
                 if (isAuthenticated) {
@@ -202,7 +212,7 @@ const ProductCard = ({ product, onOpen }) => {
               }}
               className="w-5 h-5 rounded-full bg-[#1E5BCC] text-white flex items-center justify-center"
             >
-              <FaPlus size={11} />
+              <FaPlus size={11} aria-hidden="true" />
             </button>
           </div>
         )}

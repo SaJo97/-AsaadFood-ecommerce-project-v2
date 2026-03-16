@@ -65,7 +65,7 @@ const OliveoilProducts = () => {
   }
   if (loading.getAll) {
     return (
-      <div className="mt-5" aria-busy="true" aria-live="polite">
+      <div className="mt-5" aria-busy="true" aria-live="polite" role="status">
         <div className="w-full aspect-video bg-[#696969] rounded-lg animate-pulse" />
         <div className="mt-4 w-1/2 h-7 bg-[#696969] rounded-lg animate-pulse"></div>
       </div>
@@ -78,12 +78,19 @@ const OliveoilProducts = () => {
       <title>Olivolja | Asaad Food</title>
       <meta
         name="description"
-        content="Alla olivolja produkter av högsta kvalité hos Asaad Food"
+        content="Utforska högkvalitativa olivoljor hos Asaad Food. Extra virgin olivolja från ledande varumärken."
       />
 
       <main className="flex flex-col items-center lg:gap-12.5 md:gap-10">
         {/* Hero section */}
-        <section className="w-full max-w-225" aria-label="Hero image section">
+        <section
+          className="w-full max-w-225"
+          aria-labelledby="oliveoil-hero-heading"
+        >
+          <h2 id="oliveoil-hero-heading" className="sr-only">
+            Basso olivolja reklam
+          </h2>
+
           <figure>
             <img
               src={bassoAD}
@@ -95,6 +102,9 @@ const OliveoilProducts = () => {
               decoding="async"
               fetchPriority="high"
             />
+            <figcaption className="sr-only">
+              Reklambild för Basso premium olivolja tillgänglig hos Asaad Food
+            </figcaption>
           </figure>
         </section>
 
@@ -106,22 +116,25 @@ const OliveoilProducts = () => {
         </header>
 
         {/* Brand filter */}
-        <section
+        <nav
           className="w-full max-w-175 bg-[#f9f9f9] mt-4 mb-4"
-          aria-label="Filter products by brand"
+          aria-label="Filtrera olivolja efter varumärke"
         >
           <FilterProducts
             brands={brands}
             selectedBrand={selectedBrand}
             onSelectBrand={setSelectedBrand}
           />
-        </section>
+        </nav>
 
         {/* Product listing */}
         <section
           className="w-full max-w-220"
-          aria-label="oliveoil-products-heading"
+          aria-labelledby="oliveoil-products-heading"
         >
+          <h2 id="oliveoil-products-heading" className="sr-only">
+            Lista över olivolja produkter
+          </h2>
           {Object.keys(groupedByBrand).length > 0 ? (
             Object.entries(groupedByBrand ?? {}).map(([brand, products]) => (
               <section
@@ -131,25 +144,25 @@ const OliveoilProducts = () => {
               >
                 {/* Brand header */}
                 <header className="bg-[#1E5BCC] h-9 md:h-17.5 mb-6 relative">
-                  <h2
-                    className="absolute left-2 bottom-1.25 md:bottom-3.25 md:left-3 px-1 h-6.5 md:h-10.5 text-[20px] md:text-[32px] font-crimsontext font-bold bg-white"
-                    aria-label={`Brand ${brand}`}
-                  >
+                  <h2 className="absolute left-2 bottom-1.25 md:bottom-3.25 md:left-3 px-1 h-6.5 md:h-10.5 text-[20px] md:text-[32px] font-crimsontext font-bold bg-white">
                     {brand}
                   </h2>
                 </header>
 
                 {/* Product grid */}
-                <div className="flex flex-wrap justify-center sm:justify-start gap-4 px-5 lg:px-0">
+                <ul
+                  className="flex flex-wrap justify-center sm:justify-start gap-4 px-5 lg:px-0"
+                  role="list"
+                >
                   {products.map((product) => (
-                    <article key={product._id} aria-label={product.title}>
+                    <li key={product._id} aria-label={product.title}>
                       <ProductCard
                         product={product}
                         onOpen={() => openProduct(product._id)}
                       />
-                    </article>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </section>
             ))
           ) : (
@@ -159,7 +172,10 @@ const OliveoilProducts = () => {
           )}
         </section>
         {selectedProduct && (
-          <Modale onClose={closeProduct}>
+          <Modale
+            onClose={closeProduct}
+            aria-label={`Produktdetaljer för ${selectedProduct.title}`}
+          >
             <ProductDetail product={selectedProduct} onClose={closeProduct} />
           </Modale>
         )}

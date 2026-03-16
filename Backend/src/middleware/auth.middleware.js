@@ -2,15 +2,15 @@ import jwt from "jsonwebtoken";
 
 // Middleware function to verify the JSON Web Token (JWT) from httpOnly cookie
 export const verifyToken = (req, res, next) => {
-  console.log("verifyToken called for:", req.path);
+  // console.log("verifyToken called for:", req.path);
   try {
     // Get the token from the httpOnly cookie
     const token = req.cookies.accessToken;
-    console.log("Token from cookie:", token ? "Present" : "Missing");
+    // console.log("Token from cookie:", token ? "Present" : "Missing");
 
     // Check if the token is present
     if (!token) {
-      console.log("No token provided");
+      // console.log("No token provided");
       return res
         .status(401) // Send 401 Unauthorized if no token is provided
         .json({ message: "Not authenticated. No token provided!" });
@@ -28,7 +28,7 @@ export const verifyToken = (req, res, next) => {
     // Call the next middleware function in the stack
     next();
   } catch (err) {
-    console.log("JWT VERIFY ERROR:", err.message);
+    // console.log("JWT VERIFY ERROR:", err.message);
     // Send 401 Unauthorized if token verification fails
     return res.status(401).json({ message: "Not Authenticated" });
   }

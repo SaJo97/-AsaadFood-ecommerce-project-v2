@@ -15,9 +15,9 @@ const UpdateInfo = () => {
   const userState = useSelector((state) => state.users);
   const { currentUser } = userState;
   const loading =
-    userState.loading.fetchCurrentUser || userState.loading.updateUserInfo;
+    userState.loading?.fetchCurrentUser || userState.loading?.updateUserInfo;
   const error =
-    userState.error.fetchCurrentUser || userState.error.updateUserInfo;
+    userState.error?.fetchCurrentUser || userState.error?.updateUserInfo;
 
   const [editingFields, setEditingFields] = useState({
     password: false,
@@ -79,7 +79,7 @@ const UpdateInfo = () => {
       fieldName === "password" ? ["password", "confirmPassword"] : [fieldName];
 
     const result = handleSubmit(null, fieldsToValidate);
-    console.log(result);
+    // console.log(result);
     if (!result.success) return;
 
     // Prepare userInfo with only the changed field
@@ -294,6 +294,7 @@ const UpdateInfo = () => {
                   onClick={() => toggleEditing("phone")}
                   className="px-4 py-1.5 bg-[#1E5BCC] text-white rounded focus:outline  focus:outline-offset-2"
                   disabled={loading}
+                  aria-label="ändra telefonnummer"
                 >
                   Ändra
                 </button>

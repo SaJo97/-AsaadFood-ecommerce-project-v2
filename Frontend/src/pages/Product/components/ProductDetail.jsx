@@ -42,7 +42,10 @@ const ProductDetail = ({ product, onClose }) => {
       {/* Main product section */}
       <section className="flex border-b border-[#1E5BCC]">
         {/* Product Image */}
-        <figure className="flex md:w-95.75 self-center">
+        <figure
+          className="flex md:w-95.75 self-center"
+          aria-label={`Bild på ${product.title}`}
+        >
           <img
             src={product.image}
             alt={`${product.title} from ${product.brand}`}
@@ -58,7 +61,7 @@ const ProductDetail = ({ product, onClose }) => {
             <p
               className="tracking-wide"
               itemProp="brand"
-              aria-label={`Brand: ${product.brand}`}
+              aria-label={`Varumärke: ${product.brand}`}
             >
               {product.brand}
             </p>
@@ -66,7 +69,7 @@ const ProductDetail = ({ product, onClose }) => {
             {/* Title */}
             <h3
               className="leading-tight line-clamp-2"
-              aria-label={`Product name: ${product.title}`}
+              aria-label={`Produktnamn: ${product.title}`}
               id="product-title"
               itemProp="name"
             >
@@ -74,13 +77,19 @@ const ProductDetail = ({ product, onClose }) => {
             </h3>
 
             {/* Weight */}
-            <p aria-label={`Weight: ${product.weight} ${weightMetric}`}>
+            <p aria-label={`Vikt: ${product.weight} ${weightMetric}`}>
               <span className="sr-only">Vikt:</span>
               {product.weight} {weightMetric}
             </p>
 
-            <div className="flex gap-5 font-roboto md:text-base text-[12px]">
+            <div
+              className="flex gap-5 font-roboto md:text-base text-[12px]"
+              role="group"
+              aria-label="Välj pris typ"
+            >
               <button
+                type="button"
+                aria-pressed={priceType === "unit"}
                 onClick={(e) => {
                   e.stopPropagation();
                   setPriceType("unit");
@@ -95,6 +104,8 @@ const ProductDetail = ({ product, onClose }) => {
               </button>
 
               <button
+                type="button"
+                aria-pressed={priceType === "pallet"}
                 onClick={(e) => {
                   e.stopPropagation();
                   setPriceType("pallet");
@@ -108,20 +119,33 @@ const ProductDetail = ({ product, onClose }) => {
                 Pallpris
               </button>
             </div>
+            {/* Packaging Info */}
             <div className="flex gap-2 text-sm md:text-base flex-col">
               <div className="flex flex-col md:flex-row gap-2">
                 <p>
-                  1 kartong: {unitsPerBox} st ({boxWeight}
+                  <span className="sr-only">En kartong innehåller: </span>1
+                  kartong: {unitsPerBox} st ({boxWeight}
                   {weightMetric})
                 </p>
-                <p>1 pall: {boxesPerPallet} kartonger </p>
+                <p>
+                  <span className="sr-only">Antal kartonger per pall: </span>1
+                  pall: {boxesPerPallet} kartonger
+                </p>
               </div>
               <div className="flex flex-col md:flex-row gap-2">
                 <p>
+                  <span className="sr-only">
+                    Totalt antal enheter per pall:{" "}
+                  </span>
                   Totalt per pall: {unitsPerPallet} st ({palletWeight}
                   {weightMetric})
                 </p>
-                <p>Pallpris - styck: {palletpriceunit} kr</p>
+                <p>
+                  <span className="sr-only">
+                    Styckpris baserat på pallpris:{" "}
+                  </span>
+                  Pallpris - styck: {palletpriceunit} kr
+                </p>
               </div>
             </div>
 
@@ -130,7 +154,7 @@ const ProductDetail = ({ product, onClose }) => {
               itemProp="offers"
               itemScope
               itemType="https://schema.org/Offer"
-              aria-label={`Price: ${product.price} kronor`}
+              aria-label={`Pris: ${displayPrice} kronor`}
             >
               <span className="sr-only">Pris:</span>
               <span itemProp="priceCurrency" content="SEK" />
@@ -165,10 +189,13 @@ const ProductDetail = ({ product, onClose }) => {
             ) : (
               <div
                 className="flex items-center justify-center gap-3 md:gap-5 px-3 bg-[#D9D9D9] rounded-full md:w-[169.38px] md:h-11 w-[128.19px] h-9"
+                role="group"
+                aria-label={`Antal i varukorgen för ${product.title}`}
                 aria-live="polite"
                 aria-atomic="true"
               >
                 <button
+                  type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     if (isAuthenticated) {

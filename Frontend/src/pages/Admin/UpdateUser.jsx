@@ -43,7 +43,11 @@ const UpdateUser = () => {
   };
 
   return (
-    <div className="w-full max-w-200 mx-auto flex flex-col gap-3 p-3 font-raleway">
+    <main
+      className="w-full max-w-200 mx-auto flex flex-col gap-3 p-3 font-raleway"
+      id="main-content"
+      aria-labelledby="manage-users-heading"
+    >
       {/* SEO */}
       <title>Admin | Hantera användare</title>
       <meta
@@ -51,21 +55,32 @@ const UpdateUser = () => {
         content="Adminpanel för att hantera användare i systemet. Byt roll eller ta bort användare."
       />
 
-      <header>
+      <header className="flex flex-col gap-2">
+        <h1
+          id="manage-users-heading"
+          className="text-center font-crimsontext font-bold text-2xl"
+        >
+          Hantera användare
+        </h1>
+
         <nav aria-label="Admin navigation">
-          <Link to="/adminpanel">Tillbaka</Link>
-          <h1 className="text-center font-crimsontext font-bold text-2xl">
-            Hantera användare
-          </h1>
+          <Link to="/adminpanel">Tillbaka till adminpanelen</Link>
         </nav>
       </header>
 
       {/* Search */}
-      <section aria-label="Sök användare">
+      <section aria-labelledby="search-users-heading">
+        <h2 id="search-users-heading" className="sr-only">
+          Sök användare
+        </h2>
         <label htmlFor="user-search" className="sr-only">
           Sök användare efter namn eller e-post
         </label>
+        <p id="search-help" className="sr-only">
+          Filtrera användare efter namn eller e-postadress.
+        </p>
         <input
+          aria-describedby="search-help"
           id="user-search"
           type="search"
           placeholder="Sök efter namn eller e-post..."
@@ -78,8 +93,11 @@ const UpdateUser = () => {
       {/* Users List */}
       <section
         className="rounded-2xl bg-[#f9f9f9] border p-4 flex flex-col gap-3"
-        aria-label="Lista av användare"
+        aria-labelledby="users-list-heading"
       >
+        <h2 id="users-list-heading" className="sr-only">
+          Lista över användare
+        </h2>
         {loading.fetchUsers && (
           <p role="status" aria-live="polite" className="text-center">
             Laddar användare...
@@ -118,7 +136,7 @@ const UpdateUser = () => {
                 onClick={() => handleRoleChange(user._id, user.role)}
                 disabled={loading.updateUserRole}
                 className="bg-[#1E5BCC] text-white rounded-md hover:bg-[#1747A3] px-2 py-1 transition-colors duration-150 border border-black"
-                aria-label={`Byt roll för ${user.contactPerson.firstName} ${user.contactPerson.lastName}`}
+                aria-label={`Ändra roll för ${user.contactPerson.firstName} ${user.contactPerson.lastName}`}
               >
                 Byt roll
               </button>
@@ -128,7 +146,7 @@ const UpdateUser = () => {
                 onClick={() => handleDelete(user._id)}
                 disabled={loading.delete}
                 className="bg-red-600 text-white rounded-md hover:bg-red-700 px-3 py-1 transition-colors duration-150 border border-black"
-                aria-label={`Ta bort användare ${user.contactPerson.firstName} ${user.contactPerson.lastName}`}
+                aria-label={`Ta bort användaren ${user.contactPerson.firstName} ${user.contactPerson.lastName}`}
               >
                 Ta bort
               </button>
@@ -136,7 +154,7 @@ const UpdateUser = () => {
           </article>
         ))}
       </section>
-    </div>
+    </main>
   );
 };
 

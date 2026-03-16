@@ -42,7 +42,7 @@ const ProductUpdateAdmin = ({ product, onClose }) => {
     try {
       await dispatch(updateProduct(updatedProduct)).unwrap();
       onClose();
-      console.log(formData);
+      // console.log(formData);
     } catch (error) {
       console.error("Update failed:", error);
       navigate("/");
@@ -88,7 +88,6 @@ const ProductUpdateAdmin = ({ product, onClose }) => {
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
               required
-              aria-required="true"
               aria-label="Produkttitel"
             />
           </div>
@@ -106,7 +105,6 @@ const ProductUpdateAdmin = ({ product, onClose }) => {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
                 required
-                aria-required="true"
                 aria-label="Produkttyp"
               >
                 <option value="">Välj typ</option>
@@ -126,7 +124,6 @@ const ProductUpdateAdmin = ({ product, onClose }) => {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
                 required
-                aria-required="true"
                 aria-label="Produktmärke"
               />
             </div>
@@ -146,7 +143,6 @@ const ProductUpdateAdmin = ({ product, onClose }) => {
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
               required
-              aria-required="true"
               aria-label="Produktvikt"
             />
           </div>
@@ -166,7 +162,6 @@ const ProductUpdateAdmin = ({ product, onClose }) => {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
                 required
-                aria-required="true"
                 aria-label="Styckpris"
               />
             </div>
@@ -186,7 +181,6 @@ const ProductUpdateAdmin = ({ product, onClose }) => {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
                 required
-                aria-required="true"
                 aria-label="Pallpris"
               />
             </div>
@@ -204,7 +198,6 @@ const ProductUpdateAdmin = ({ product, onClose }) => {
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
               required
-              aria-required="true"
               aria-label="Produktbild URL"
             />
           </div>
@@ -220,7 +213,6 @@ const ProductUpdateAdmin = ({ product, onClose }) => {
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none min-h-35"
               required
-              aria-required="true"
               aria-label="Produktbeskrivning"
             />
           </div>
@@ -236,11 +228,11 @@ const ProductUpdateAdmin = ({ product, onClose }) => {
             </button>
             <button
               type="submit"
-              disabled={loading.update}
+              disabled={loading?.update}
               className="bg-[#1E5BCC] text-white rounded-md hover:bg-[#1747A3] px-2 py-1 transition-colors duration-150 flex items-center justify-center cursor-pointer min-w-15 md:min-w-17.5 lg:min-w-20 w-full border border-black"
               aria-label="Spara uppdateringar av produkt"
             >
-              {loading.update ? "Sparar..." : "Spara"}
+              {loading?.update ? "Sparar..." : "Spara"}
             </button>
           </div>
         </form>

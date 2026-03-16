@@ -72,23 +72,30 @@ const CreateProduct = () => {
       });
       navigate("/adminpanel");
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       setError(err.response?.data?.message || "Något gick fel!");
       navigate("/");
     }
   };
 
   return (
-    <div className="w-full max-w-200 mx-auto flex flex-col gap-2 p-3 font-raleway lg:text-[18px]">
+    <main
+      className="w-full max-w-200 mx-auto flex flex-col gap-2 p-3 font-raleway lg:text-[18px]"
+      id="main-content"
+      aria-labelledby="create-product-title"
+    >
       {/* SEO */}
       <title>Skapa produkt | Asaad Food Admin</title>
       <meta
         name="description"
-        content="Adminpanel: Skapa nya produkter i Asaad Food sortimentet."
+        content="Adminpanel för att skapa nya produkter i Asaad Foods sortiment."
       />
 
       <header>
-        <h1 className="text-center font-crimsontext font-bold text-2xl">
+        <h1
+          className="text-center font-crimsontext font-bold text-2xl"
+          id="create-product-title"
+        >
           Skapa produkt
         </h1>
       </header>
@@ -106,6 +113,8 @@ const CreateProduct = () => {
           onSubmit={handleSubmit}
           className="flex flex-col p-4 gap-3 w-full"
           aria-describedby={error ? "form-error" : undefined}
+          aria-labelledby="create-product-heading"
+          noValidate
         >
           {/* Error */}
           {error && (
@@ -113,6 +122,8 @@ const CreateProduct = () => {
               id="form-error"
               role="alert"
               className="text-red-500 font-medium text-sm"
+              aria-live="assertive"
+              aria-atomic="true"
             >
               {error}
             </p>
@@ -124,18 +135,20 @@ const CreateProduct = () => {
               Titel
             </label>
             <input
+              itemProp="name"
               type="text"
+              autoFocus
               id="title"
               value={formData.title}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
               required
-              aria-required="true"
             />
           </div>
 
           {/* Type + Brand */}
-          <div className="grid grid-cols-2 gap-4">
+          <fieldset className="grid grid-cols-2 gap-4">
+            <legend className="sr-only">Produkt Typ & Märke</legend>
             <div>
               <label htmlFor="type" className="block font-semibold mb-1">
                 Typ
@@ -146,7 +159,6 @@ const CreateProduct = () => {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
                 required
-                aria-required="true"
               >
                 <option value="">Välj typ</option>
                 <option value="Rice">Ris</option>
@@ -159,16 +171,16 @@ const CreateProduct = () => {
                 Märke
               </label>
               <input
+                itemProp="brand"
                 type="text"
                 id="brand"
                 value={formData.brand}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
                 required
-                aria-required="true"
               />
             </div>
-          </div>
+          </fieldset>
 
           {/* Weight */}
           <div>
@@ -182,11 +194,11 @@ const CreateProduct = () => {
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
               required
-              aria-required="true"
             />
           </div>
           {/* Prices */}
-          <div className="grid grid-cols-2 gap-4">
+          <fieldset className="grid grid-cols-2 gap-4">
+            <legend className="sr-only">Priser: Styckpris & Pallpris</legend>
             <div>
               <label htmlFor="unitPrice" className="block font-semibold mb-1">
                 Styckpris (kr)
@@ -198,7 +210,6 @@ const CreateProduct = () => {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
                 required
-                aria-required="true"
               />
             </div>
 
@@ -213,10 +224,9 @@ const CreateProduct = () => {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
                 required
-                aria-required="true"
               />
             </div>
-          </div>
+          </fieldset>
 
           {/* Image */}
           <div>
@@ -224,14 +234,13 @@ const CreateProduct = () => {
               Bild (URL)
             </label>
             <input
-              type="text"
+              type="url"
               id="image"
               value={formData.image}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none"
               placeholder="https://example.com/image.jpg"
               required
-              aria-required="true"
             />
           </div>
 
@@ -241,12 +250,12 @@ const CreateProduct = () => {
               Produktinformation
             </label>
             <textarea
+              itemProp="description"
               id="description"
               value={formData.description}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#1E5BCC] outline-none min-h-35"
               required
-              aria-required="true"
             />
           </div>
 
@@ -256,6 +265,7 @@ const CreateProduct = () => {
               type="button"
               onClick={() => navigate("/adminpanel")}
               className="bg-[#1E5BCC] text-white rounded-md hover:bg-[#1747A3] px-2 py-1 transition-colors duration-150 flex items-center justify-center cursor-pointer w-full border border-black"
+              aria-label="Avbryt och gå tillbaka till adminpanelen"
             >
               Avbryt
             </button>
@@ -263,13 +273,14 @@ const CreateProduct = () => {
             <button
               type="submit"
               className="bg-[#1E5BCC] text-white rounded-md hover:bg-[#1747A3] px-2 py-1 transition-colors duration-150 flex items-center justify-center cursor-pointer w-full border border-black"
+              aria-label="Skapa produkt"
             >
               Skapa
             </button>
           </div>
         </form>
       </section>
-    </div>
+    </main>
   );
 };
 export default CreateProduct;

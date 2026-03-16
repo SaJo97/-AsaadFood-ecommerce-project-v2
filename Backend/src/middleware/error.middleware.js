@@ -8,7 +8,7 @@ export const notFound = (req, res, next) => {
 
 // Middleware function to handle errors
 export const errorHandler = (err, req, res, next) => {
-  console.log(`Error: ${err.message}`); // Log the error message to the console
+  // console.log(`Error: ${err.message}`); // Log the error message to the console
 
   // Determine the status code to send in the response
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode; // If status is 200, set it to 500 (Internal Server Error)

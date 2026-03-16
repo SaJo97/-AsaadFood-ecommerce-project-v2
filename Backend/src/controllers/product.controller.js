@@ -83,7 +83,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { title, brand, weight, price, image, description, type } = req.body; // Destructure request body
 
-  console.log("Incoming request body:", req.body);
+  // console.log("Incoming request body:", req.body);
 
   // Check if the ID is valid
   if (!mongoose.isValidObjectId(id)) {
@@ -137,7 +137,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
 export const deleteProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  console.log("Attempting to delete product with ID:", id);
+  // console.log("Attempting to delete product with ID:", id);
 
   // Check if the ID is valid
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -149,7 +149,7 @@ export const deleteProduct = asyncHandler(async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: `Can't find that product` });
     }
-    console.log("Product deleted successfully:", product);
+    // console.log("Product deleted successfully:", product);
     res.sendStatus(204);
   } catch (error) {
     console.error("Error deleting product2:", error); // Log the error

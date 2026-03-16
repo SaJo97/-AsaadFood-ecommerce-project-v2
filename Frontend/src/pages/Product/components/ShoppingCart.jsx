@@ -58,9 +58,13 @@ const ShoppingCart = ({ setIsOpen, isCheckoutPage }) => {
     <aside
       className="w-full w-max-225 bg-white shadow-lg rounded-lg p-3 md:p-4"
       aria-labelledby="cart-heading"
+      aria-describedby="cart-summary"
+      role="complementary"
+      itemScope
+      itemType="https://schema.org/ItemList"
     >
       <header>
-        <h1
+        <h2
           className={
             isCheckout
               ? "font-quattrocento text-lg mb-3"
@@ -69,9 +73,11 @@ const ShoppingCart = ({ setIsOpen, isCheckoutPage }) => {
           id="cart-heading"
         >
           Varukorg {isCheckout ? `(${totalQuantity} varor)` : ""}
-        </h1>
+          <span className="sr-only"> – antal produkter i varukorgen</span>
+        </h2>
       </header>
 
+      {/* EMPTY CART */}
       {cart.length === 0 && (
         <p
           className="text-center text-gray-500 py-6"
@@ -82,23 +88,37 @@ const ShoppingCart = ({ setIsOpen, isCheckoutPage }) => {
         </p>
       )}
 
+      {/* CART ITEMS */}
       {cart.length > 0 && (
-        <div className={isCheckout ? "" : "max-h-[50vh] overflow-y-auto"}>
+        <section
+          className={isCheckout ? "" : "max-h-[50vh] overflow-y-auto"}
+          aria-labelledby="cart-items-heading"
+        >
+          <h3 id="cart-items-heading" className="sr-only">
+            Produkter i varukorgen
+          </h3>
           <ul
             className={
               isCheckout ? "flex flex-col md:gap-6 gap-3" : "space-y-3"
             }
-            aria-label="Produkter i varukorgen"
+            role="list"
           >
-            {cart.map((item) => (
-              <li key={`${item.productId}-${item.priceType}`}>
+            {cart.map((item, index) => (
+              <li
+                key={`${item.productId}-${item.priceType}`}
+                itemProp="itemListElement"
+                itemScope
+                itemType="https://schema.org/ListItem"
+              >
+                <meta itemProp="position" content={index + 1} />
                 <CartItem item={item} />
               </li>
             ))}
           </ul>
-        </div>
+        </section>
       )}
 
+      {/* CART SUMMARY */}
       <section
         className={
           isCheckout
@@ -106,9 +126,10 @@ const ShoppingCart = ({ setIsOpen, isCheckoutPage }) => {
             : "flex  items-center gap-1 pt-4 flex-col"
         }
         aria-labelledby="cart-summary"
+        id="cart-summary"
       >
         <h3 id="cart-summary" className="sr-only">
-          Sammanfattning
+          Sammanfattning av varukorgen
         </h3>
 
         <dl
@@ -121,14 +142,14 @@ const ShoppingCart = ({ setIsOpen, isCheckoutPage }) => {
           <div
             className={
               isCheckout
-                ? "flex justify-between border-b border-black p-2"
+                ? "flex justify-between p-2" // border-b border-black
                 : "flex gap-2"
             }
           >
             <dt>{isCheckout ? "Total varukostnad:" : "Total:"} </dt>
-            <dd>{totalPrice} kr</dd>
+            <dd aria-live="polite">{totalPrice} kr</dd>
           </div>
-          <div
+          {/* <div
             className={
               isCheckout
                 ? "flex justify-between border-b border-black p-2"
@@ -145,9 +166,10 @@ const ShoppingCart = ({ setIsOpen, isCheckoutPage }) => {
           >
             <dt>Totalbelopp: </dt>
             <dd>xxx kr</dd>
-          </div>
+          </div> */}
         </dl>
 
+        {/* CHECKOUT BUTTONS */}
         {isCheckoutPage ? (
           <button
             onClick={handlePlaceOrder}
@@ -155,36 +177,45 @@ const ShoppingCart = ({ setIsOpen, isCheckoutPage }) => {
             type="button"
             disabled={cart.length === 0}
             aria-disabled={cart.length === 0}
+            aria-label="Skicka beställning"
           >
             Beställ
           </button>
         ) : (
-          <Link
-            to="/kassa"
-            onClick={() => setIsOpen(false)}
-            className="px-4 py-2 bg-[#1E5BCC] text-white rounded-full w-full text-center hover:bg-[#256ff8]"
-            aria-label="Gå till kassan"
-          >
-            Gå till kassan
-          </Link>
+          <nav aria-label="Kassa navigering" className="flex w-full">
+            <Link
+              to="/kassa"
+              onClick={() => setIsOpen(false)}
+              className="px-4 py-2 bg-[#1E5BCC] text-white rounded-full w-full text-center hover:bg-[#256ff8]"
+              aria-label="Gå till kassan och slutför beställning"
+            >
+              Gå till kassan
+            </Link>
+          </nav>
         )}
       </section>
 
+      {/* MODAL */}
       {showModal && (
         <Modale onClose={() => setShowModal(false)}>
           <div
             className="p-6 text-center"
             role="alertdialog"
+            aria-modal="true"
             aria-labelledby="modal-title"
-            aria-live="assertive"
+            aria-describedby="modal-message"
           >
             <h2 id="modal-title" className="text-lg font-semibold mb-3">
               Meddelande
             </h2>
-            <p className="mb-4">{modalMessage}</p>
+            <p className="mb-4" id="modal-message">
+              {modalMessage}
+            </p>
             <button
               onClick={() => setShowModal(false)}
               className="px-4 py-2 bg-[#1E5BCC] text-white rounded-full hover:bg-[#1747A3]"
+              aria-label="Stäng meddelande"
+              type="button"
             >
               Stäng
             </button>

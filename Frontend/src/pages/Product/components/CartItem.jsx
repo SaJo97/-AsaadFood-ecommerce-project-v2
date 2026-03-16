@@ -19,18 +19,24 @@ const CartItem = ({ item }) => {
       itemScope
       itemType="https://schema.org/Product"
       aria-label={`Produkt i varukorg: ${item.product.title}`}
+      role="group"
     >
       {!isCheckout ? (
         <div className="flex justify-between items-center border rounded p-2">
           <div className="flex items-center gap-3">
             <img
               src={item.product.image}
+              itemProp="image"
+              loading="lazy"
+              decoding="async"
               alt={`Produktbild av ${item.product.title}`}
               className="w-14 h-14 object-contain rounded"
             />
 
             <div>
-              <h3 itemProp="name">{item.product.title}</h3>
+              <h3 itemProp="name" id={`cart-item-${item.product._id}`}>
+                {item.product.title}
+              </h3>
               <p className="text-sm text-gray-500">
                 {item.quantity} × {item.price} kr
               </p>
@@ -45,6 +51,8 @@ const CartItem = ({ item }) => {
               className="p-1 border rounded hover:bg-gray-100 cursor-pointer"
               aria-label={`Minska antal av ${item.product.title}`}
               title="Minska antal"
+              type="button"
+              aria-controls={`quantity-${item.product._id}`}
             >
               <FaMinus className="text-xs" aria-hidden="true" />
             </button>
@@ -54,19 +62,24 @@ const CartItem = ({ item }) => {
                 dispatch(addToCart({ product: item.product, priceType }))
               }
               className="p-1 border rounded hover:bg-gray-100 cursor-pointer"
+              aria-controls={`quantity-${item.product._id}`}
               aria-label={`Öka antal av ${item.product.title}`}
               title="Öka antal"
+              type="button"
             >
               <FaPlus className="text-xs" aria-hidden="true" />
             </button>
 
             <button
+              type="button"
               onClick={() =>
                 dispatch(removeItem({ productId: item.product._id, priceType }))
               }
               className="p-1 text-red-500 hover:text-red-700 cursor-pointer"
+              aria-label={`Ta bort ${item.product.title} från varukorgen`}
+              title="Ta bort produkt"
             >
-              <FaTrash />
+              <FaTrash aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -78,14 +91,22 @@ const CartItem = ({ item }) => {
               src={item.product.image}
               alt={`Produktbild av ${item.product.title}`}
               className="max-h-20 object-contain"
+              itemProp="image"
+              loading="lazy"
+              decoding="async"
             />
           </div>
 
           {/* Product info */}
           <div className="flex flex-col justify-center gap-1 p-1 md:px-2 flex-1 border-l border-black">
-            <h3 className="break-all font-bold" itemProp="brand">
-              {item.product.brand}
-            </h3>
+            <span
+              className="break-all font-bold"
+              itemProp="brand"
+              itemScope
+              itemType="https://schema.org/Brand"
+            >
+              <span itemProp="name">{item.product.brand}</span>
+            </span>
             <p className="break-all font-bold" itemProp="name">
               {item.product.title}
             </p>
@@ -101,6 +122,7 @@ const CartItem = ({ item }) => {
             itemScope
             itemType="https://schema.org/Offer"
           >
+            <meta itemProp="priceCurrency" content="SEK" />
             <p
               className="bg-gray-100 w-full text-center py-1 font-bold"
               aria-label="ordinarie pris"
@@ -135,6 +157,8 @@ const CartItem = ({ item }) => {
                     removeOne({ productId: item.product._id, priceType }),
                   )
                 }
+                type="button"
+                aria-controls={`quantity-${item.product._id}`}
               >
                 <FaMinus aria-hidden="true" />
               </button>
@@ -146,17 +170,21 @@ const CartItem = ({ item }) => {
                     rounded-full
                     tabular-nums"
                 aria-live="polite"
+                role="status"
                 aria-atomic="true"
+                id={`quantity-${item.product._id}`}
               >
                 {item.quantity}
               </span>
               <button
                 className="cursor-pointer w-5 h-5 rounded-full bg-[#1E5BCC] text-white flex items-center justify-center"
+                aria-controls={`quantity-${item.product._id}`}
                 aria-label={`Öka antal av ${item.product.title}`}
                 title="Öka antal"
                 onClick={() =>
                   dispatch(addToCart({ product: item.product, priceType }))
                 }
+                type="button"
               >
                 <FaPlus aria-hidden="true" />
               </button>
@@ -187,7 +215,9 @@ const CartItem = ({ item }) => {
                 }
                 className="w-5 h-5 rounded-full bg-[#1E5BCC] text-white flex items-center justify-center"
                 aria-label={`Minska antal av ${item.product.title}`}
+                aria-controls={`quantity-${item.product._id}`}
                 title="Minska antal"
+                type="button"
               >
                 <FaMinus className="text-xs" aria-hidden="true" />
               </button>
@@ -200,7 +230,9 @@ const CartItem = ({ item }) => {
                     rounded-full
                     tabular-nums"
                 aria-live="polite"
+                role="status"
                 aria-atomic="true"
+                id={`quantity-${item.product._id}`}
               >
                 {item.quantity}
               </span>
@@ -210,8 +242,10 @@ const CartItem = ({ item }) => {
                   dispatch(addToCart({ product: item.product, priceType }))
                 }
                 className="w-5 h-5 rounded-full bg-[#1E5BCC] text-white flex items-center justify-center"
+                aria-controls={`quantity-${item.product._id}`}
                 aria-label={`Öka antal av ${item.product.title}`}
                 title="Öka antal"
+                type="button"
               >
                 <FaPlus className="text-xs" aria-hidden="true" />
               </button>
@@ -223,10 +257,12 @@ const CartItem = ({ item }) => {
             <button
               className="cursor-pointer text-red-500 hover:text-red-700"
               aria-label={`Ta bort ${item.product.title} från varukorgen`}
+              aria-describedby={`cart-item-${item.product._id}-title`}
               title="Ta bort produkt"
               onClick={() =>
                 dispatch(removeItem({ productId: item.product._id, priceType }))
               }
+              type="button"
             >
               <FaTrash size={20} aria-hidden="true" />
             </button>

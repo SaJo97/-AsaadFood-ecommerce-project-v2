@@ -9,7 +9,7 @@ const ProductCardAdmin = ({ product, onOpen }) => {
     // kanske lägga modal med confirmation msg "är du säker att ta bort?"
     try {
       await dispatch(deleteProduct(product._id)).unwrap();
-      console.log("deleted success");
+      // console.log("deleted success");
     } catch (error) {
       console.error("error deleting", error);
       navigate("/");

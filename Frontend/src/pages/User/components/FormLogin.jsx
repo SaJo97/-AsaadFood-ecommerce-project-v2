@@ -30,7 +30,7 @@ const FormLogin = () => {
 
     try {
       await dispatch(login(formData)).unwrap();
-      console.log("Login successful");
+      // console.log("Login successful");
       // console.log(formData);
       navigate(`/konto`);
     } catch (err) {

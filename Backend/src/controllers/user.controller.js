@@ -337,12 +337,12 @@ export const checkAuth = asyncHandler(async (req, res) => {
   if (!user) {
     return res.status(404).json({ message: "Användare hittades inte" });
   }
-  console.log("User found:", user);
+  // console.log("User found:", user);
   res.json({ email: user.loginEmail, role: user.role });
 });
 
 export const refresh = asyncHandler(async (req, res) => {
-  console.log("Cookies:", req.cookies);
+  // console.log("Cookies:", req.cookies);
   const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken)
