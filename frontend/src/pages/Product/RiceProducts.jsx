@@ -10,6 +10,9 @@ import Modale from "@/components/Modale";
 const RiceProducts = () => {
   const dispatch = useDispatch();
   const [selectedBrand, setSelectedBrand] = useState("ALLA");
+  const [videoExists, setVideoExists] = useState(true);
+
+  if (!videoExists) return null;
 
   const { products, loading, error } = useSelector(
     (state) => state.productList,
@@ -100,6 +103,25 @@ const RiceProducts = () => {
               Reklamvideo som visar Asaad Foods olika risprodukter.
             </p>
           </div> */}
+          <div>
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              className="w-full h-auto md:rounded-lg"
+              aria-describedby="video-description"
+              onError={() => setVideoExists(false)}
+            >
+              <source src="/assets/AsaadFoodv3.mp4" type="video/mp4" />
+              <p className="text-center">Din webbläsare stödjer inte video.</p>
+            </video>
+
+            <p id="video-description" className="sr-only">
+              Reklamvideo som visar Asaad Foods olika risprodukter.
+            </p>
+          </div>
         </section>
 
         {/* Page heading */}
@@ -166,7 +188,10 @@ const RiceProducts = () => {
           )}
         </section>
         {selectedProduct && (
-          <Modale onClose={closeProduct} aria-label={`Produktdetaljer för ${selectedProduct.title}`}>
+          <Modale
+            onClose={closeProduct}
+            aria-label={`Produktdetaljer för ${selectedProduct.title}`}
+          >
             <ProductDetail product={selectedProduct} onClose={closeProduct} />
           </Modale>
         )}
