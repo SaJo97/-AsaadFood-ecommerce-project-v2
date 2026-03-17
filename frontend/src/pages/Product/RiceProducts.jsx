@@ -6,7 +6,7 @@ import FilterProducts from "./components/FilterProducts";
 import ProductDetail from "./components/ProductDetail";
 import useProductModal from "@/hooks/useProductModal";
 import Modale from "@/components/Modale";
-import mahmoodAD from "@/assets/AsaadFoodv3.mp4";
+// import mahmoodAD from "@/assets/AsaadFoodv3.mp4";
 const RiceProducts = () => {
   const dispatch = useDispatch();
   const [selectedBrand, setSelectedBrand] = useState("ALLA");
@@ -83,7 +83,7 @@ const RiceProducts = () => {
           <h2 id="rice-video-heading" className="sr-only">
             Asaad Food risprodukter video
           </h2>
-          <div>
+          {/* <div>
             <video
               autoPlay
               muted
@@ -99,7 +99,7 @@ const RiceProducts = () => {
             <p id="video-description" className="sr-only">
               Reklamvideo som visar Asaad Foods olika risprodukter.
             </p>
-          </div>
+          </div> */}
         </section>
 
         {/* Page heading */}
