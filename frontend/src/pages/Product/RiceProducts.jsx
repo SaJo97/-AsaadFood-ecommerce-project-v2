@@ -110,12 +110,12 @@ const RiceProducts = () => {
               loop
               playsInline
               preload="auto"
-              className="w-full h-auto md:rounded-lg"
+              className="w-full h-auto md:rounded-lg text-center"
               aria-describedby="video-description"
               onError={() => setVideoExists(false)}
             >
               <source src="/assets/AsaadFoodv3.mp4" type="video/mp4" />
-              <p className="text-center">Din webbläsare stödjer inte video.</p>
+              Din webbläsare stödjer inte video.
             </video>
 
             <p id="video-description" className="sr-only">
