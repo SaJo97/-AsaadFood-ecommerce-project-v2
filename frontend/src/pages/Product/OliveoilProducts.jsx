@@ -57,8 +57,8 @@ const OliveoilProducts = () => {
   if (error.getAll) {
     return (
       <div className="mt-10">
-        <p className="text-red-500" role="alert">
-          {error.getAll}
+        <p className="text-red-500 text-center" role="alert">
+          {error.getAll} ERROR
         </p>
       </div>
     );
@@ -66,8 +66,8 @@ const OliveoilProducts = () => {
   if (loading.getAll) {
     return (
       <div className="mt-5" aria-busy="true" aria-live="polite" role="status">
-        <div className="w-full aspect-video bg-[#696969] rounded-lg animate-pulse" />
-        <div className="mt-4 w-1/2 h-7 bg-[#696969] rounded-lg animate-pulse"></div>
+        <p className="text-center font-cinzel">Laddar...</p>
+        <div className="w-full h-screen aspect-video bg-[#e2dfdf] animate-pulse" />
       </div>
     );
   }

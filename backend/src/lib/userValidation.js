@@ -70,11 +70,6 @@ export const registerValidation = [
     .withMessage("Ogiltigt postnummer"),
 
   body("city").trim().matches(cityRegex).withMessage("Ogiltig ort"),
-
-  // body("role")
-  //   .optional()
-  //   .isIn(Object.values(ROLES))
-  //   .withMessage("Ogiltig roll"),
 ];
 
 // Validation rules for login

@@ -15,7 +15,6 @@ const ProductCard = ({ product, onOpen }) => {
   // Decide metric based on product type
   const weightMetric = product.type === "Oliveoil" ? "L" : "kg";
 
-  // const cartItem = cart.find((item) => item.product._id === product._id);
   const cartItem = cart.find(
     (item) => item.product._id === product._id && item.priceType === priceType,
   );

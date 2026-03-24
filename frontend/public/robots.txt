@@ -1,0 +1,15 @@
+# robots.txt for Asaad Food
+# https://www.asaadfood.se/robots.txt
+
+# Applies to all web crawlers
+User-agent: *
+
+# Disallow crawling API endpoints and admin routes
+Disallow: /api/
+Disallow: /admin/
+
+# Allow crawling the rest of the site
+Allow: /
+
+# Sitemap location
+Sitemap: https://www.asaadfood.se/sitemap.xml

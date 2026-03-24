@@ -6,7 +6,6 @@ const ProductCardAdmin = ({ product, onOpen }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleDelete = async () => {
-    // kanske lägga modal med confirmation msg "är du säker att ta bort?"
     try {
       await dispatch(deleteProduct(product._id)).unwrap();
       // console.log("deleted success");

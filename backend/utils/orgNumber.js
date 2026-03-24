@@ -32,15 +32,3 @@ export const isValidOrgNumber = (value) => {
   return true;
 };
 
-// API validation kanske gör senare
-// const validateOrgViaAPI = async (orgNumber) => {
-//   const response = await fetch("API_URL", {
-//     headers: { Authorization: `Bearer ${process.env.API_KEY}` },
-//   });
-
-//   if (!response.ok) {
-//     throw new Error("Organisationen finns inte");
-//   }
-
-//   return true;
-// };

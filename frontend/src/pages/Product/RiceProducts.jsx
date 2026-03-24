@@ -6,10 +6,11 @@ import FilterProducts from "./components/FilterProducts";
 import ProductDetail from "./components/ProductDetail";
 import useProductModal from "@/hooks/useProductModal";
 import Modale from "@/components/Modale";
-// import mahmoodAD from "/assets/AsaadFoodv3.mp4";
+import mahbak from "@/assets/mahmoodbakground.svg";
 const RiceProducts = () => {
   const dispatch = useDispatch();
   const [selectedBrand, setSelectedBrand] = useState("ALLA");
+  const [videoError, setVideoError] = useState(false);
 
   const { products, loading, error } = useSelector(
     (state) => state.productList,
@@ -55,8 +56,8 @@ const RiceProducts = () => {
   if (error.getAll) {
     return (
       <div className="mt-10">
-        <p className="text-red-500" role="alert">
-          {error.getAll}
+        <p className="text-red-500 text-center" role="alert">
+          {error.getAll} ERROR
         </p>
       </div>
     );
@@ -64,7 +65,8 @@ const RiceProducts = () => {
   if (loading.getAll) {
     return (
       <div className="mt-5" aria-busy="true" aria-live="polite" role="status">
-        <div className="w-full h-screen aspect-video bg-[#696969] rounded-lg animate-pulse" />
+        <p className="text-center font-cinzel">Laddar...</p>
+        <div className="w-full h-screen aspect-video bg-[#e2dfdf] animate-pulse" />
       </div>
     );
   }
@@ -83,23 +85,34 @@ const RiceProducts = () => {
           <h2 id="rice-video-heading" className="sr-only">
             Asaad Food risprodukter video
           </h2>
-          {/* <div>
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              className="w-full h-auto md:rounded-lg"
-              aria-describedby="video-description"
-            >
-              <source src={mahmoodAD} type="video/mp4" />
-              <p className="text-center">Din webbläsare stödjer inte video.</p>
-            </video>
-            <p id="video-description" className="sr-only">
-              Reklamvideo som visar Asaad Foods olika risprodukter.
-            </p>
-          </div> */}
+          <div>
+            {!videoError ? (
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                className="w-full h-auto md:rounded-lg"
+                aria-describedby="video-description"
+                onError={() => setVideoError(true)}
+              >
+                <source src="/assets/AsaadFoodv3.mp4" type="video/mp4" />
+                <p className="text-center">
+                  Din webbläsare stödjer inte video.
+                </p>
+                <p id="video-description" className="sr-only">
+                  Reklamvideo som visar Asaad Foods olika risprodukter.
+                </p>
+              </video>
+            ) : (
+              <img
+                src={mahbak}
+                alt="Asaad Food risprodukter"
+                className="w-full h-auto md:rounded-lg"
+              />
+            )}
+          </div>
         </section>
 
         {/* Page heading */}

@@ -5,7 +5,7 @@ import { NavLink, useLocation } from "react-router";
 import { useSelector } from "react-redux";
 import Dropdown from "./Dropdown";
 import useAuth from "@/hooks/useAuth";
-const Navbar = () => {// vitest
+const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const navRef = useRef(null);

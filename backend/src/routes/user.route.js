@@ -52,10 +52,10 @@ router.put(
 
 router.delete("/users/:id", verifyToken, verifyRoles(ROLES.ADMIN), deleteUser);
 
-router.get("/me", verifyToken, checkAuth); // fixa 401
-router.get("/user/current", verifyToken, getCurrentUser); // fixa 401
+router.get("/me", verifyToken, checkAuth); 
+router.get("/user/current", verifyToken, getCurrentUser); 
 // Logout route (clear cookie)
 router.post("/logout", logout);
-router.post("/refresh", refresh); // POST
+router.post("/refresh", refresh);
 
 export default router;

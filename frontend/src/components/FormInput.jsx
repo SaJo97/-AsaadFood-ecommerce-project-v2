@@ -26,7 +26,6 @@ const FormInput = ({
         aria-describedby={errorId}
         required={required}
         {...rest}
-        // className={`border-3 p-1 ${errorMsg ? "border-[#D12323]" : ""}`}
         className={`border-2 p-2 rounded focus:outline-none focus:ring ${
           errorMsg
             ? "border-[#D12323] focus:ring-[#D12323]"

@@ -142,12 +142,4 @@ export const validate = (form, fields = null) => {
   return { isValid, errors: err };
 };
 
-// FIXA SENARE
-// import { isValidOrgNumber } from "@/shared/validators/orgNumber";
 
-// if (!isValidOrgNumber(formData.orgNumber)) {
-//   setErrors((prev) => ({
-//     ...prev,
-//     orgNumber: "Ogiltigt organisationsnummer",
-//   }));
-// }

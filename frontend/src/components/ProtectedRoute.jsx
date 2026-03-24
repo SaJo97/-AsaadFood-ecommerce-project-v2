@@ -16,7 +16,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
 
   // Show loading if auth is being verified (prevents flash of redirect)
   if (loading.checkAuth) {
-    return <div className="text-center">Laddar...</div>; // Or a spinner component
+    return <div className="text-center">Laddar...</div>; 
   }
 
   if (!isAuthenticated) {

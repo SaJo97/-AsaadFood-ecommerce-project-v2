@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import app from "./app.js";
 
-
 // Define the port for the server to listen on, using the environment variable or defaulting to 8585
 const PORT = process.env.PORT || 8585;
 // Get the MongoDB connection URI from environment variables

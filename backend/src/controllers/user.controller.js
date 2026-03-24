@@ -86,17 +86,10 @@ export const register = asyncHandler(async (req, res) => {
   });
 
   // Generate token
-  // const token = generateToken(user);
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
   // Set httpOnly cookie with the token (secure, client can't access)
-  // res.cookie("jwt", token, {
-  //   httpOnly: true, // Prevents client-side access (better security)
-  //   secure: process.env.NODE_ENV === "production", // Use HTTPS in production
-  //   sameSite: "strict", // CSRF protection
-  //   maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-  // });
     res.cookie("accessToken", accessToken, {
     httpOnly: true,
     secure: isProduction,
@@ -163,20 +156,9 @@ export const login = asyncHandler(async (req, res) => {
   }
 
   // Generate token
-  // const token = generateToken(user);
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
-  // user.refreshToken = refreshToken;
-  // await user.save();
-
-  // Set httpOnly cookie with the token
-  // res.cookie("jwt", token, {
-  //   httpOnly: true,
-  //   secure: process.env.NODE_ENV === "production",
-  //   sameSite: "strict",
-  //   maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-  // });
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
     secure: isProduction,
@@ -204,14 +186,6 @@ export const login = asyncHandler(async (req, res) => {
     },
     accessToken,
   });
-  // res.status(200).json({
-  //   accessToken,
-  //   user: {
-  //     _id: user._id,
-  //     loginEmail: user.loginEmail,
-  //     role: user.role,
-  //   },
-  // });
 });
 
 // Controller to handle get all users
@@ -292,23 +266,10 @@ export const deleteUser = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: "Användare hittades inte" });
   }
 
-  res.status(204).send(); // No content
+  res.status(204).send();
 });
 
-// export const logout = asyncHandler(async (req, res) => {
-//   res.cookie('jwt', '', { maxAge: 1 });  // Clear cookie
-//   res.status(200).json({ message: 'Utloggad' });
-// });
-
 export const logout = asyncHandler(async (req, res) => {
-  // Clear the 'jwt' cookie
-  // res.clearCookie("jwt", {
-  //   httpOnly: true, // Ensures the cookie can't be accessed via JavaScript
-  //   secure: process.env.NODE_ENV === "production", // Ensures the cookie is only sent over HTTPS in production
-  //   sameSite: "strict", // Helps prevent CSRF attacks
-  //   path: "/", // The path to which the cookie is valid
-  // });
-
   res.clearCookie("accessToken", {
     httpOnly: true,
     secure: isProduction,

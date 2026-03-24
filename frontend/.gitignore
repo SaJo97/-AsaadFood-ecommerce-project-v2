@@ -23,5 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-robots.txt
+# robots.txt
+# sitemap.xml
 *.mp4
