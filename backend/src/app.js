@@ -21,6 +21,7 @@ app.use(cors({ // kanske ta bort senare
     origin: "http://localhost:5173",
     credentials: true,
   }))
+// app.use(cors())
 
 // Define routes for different API endpoints
 app.use("/api/message", messageRouter); // Route for message-related operations
@@ -34,8 +35,8 @@ if(process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../frontend/dist')))
   
   // For all other routes, send the 'index.html' file to handle client-side routing
-  app.get((req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'))
+  app.use((req, res) => {
+    res.sendFile(path.resolve(__dirname, '../frontend', 'dist', 'index.html'))
   })
 }
 
