@@ -10,7 +10,7 @@ import mahbak from "@/assets/mahmoodbakground.svg";
 const RiceProducts = () => {
   const dispatch = useDispatch();
   const [selectedBrand, setSelectedBrand] = useState("ALLA");
-  const [videoError, setVideoError] = useState(false);
+  // const [videoError, setVideoError] = useState(false);
 
   const { products, loading, error } = useSelector(
     (state) => state.productList,
@@ -86,8 +86,8 @@ const RiceProducts = () => {
             Asaad Food risprodukter video
           </h2>
           <div>
-            {!videoError ? (
-              <video
+            {/* {!videoError ? ( */}
+              {/* <video
                 autoPlay
                 muted
                 loop
@@ -104,8 +104,8 @@ const RiceProducts = () => {
                 <p id="video-description" className="sr-only">
                   Reklamvideo som visar Asaad Foods olika risprodukter.
                 </p>
-              </video>
-            ) : (
+              </video> */}
+            {/* ) : ( */}
               <figure>
                 <img
                   src={mahbak}
@@ -121,7 +121,7 @@ const RiceProducts = () => {
                   Reklambild för Mahmood ris tillgänglig hos Asaad Food
                 </figcaption>
               </figure>
-            )}
+            {/* )} */}
           </div>
         </section>
 
