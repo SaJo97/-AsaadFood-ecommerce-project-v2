@@ -106,11 +106,21 @@ const RiceProducts = () => {
                 </p>
               </video>
             ) : (
-              <img
-                src={mahbak}
-                alt="Asaad Food risprodukter"
-                className="w-full h-auto md:rounded-lg"
-              />
+              <figure>
+                <img
+                  src={mahbak}
+                  width="1200"
+                  height="600"
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
+                  alt="Asaad Food risprodukter"
+                  className="w-full h-auto md:rounded-lg"
+                />
+                <figcaption className="sr-only">
+                  Reklambild för Mahmood ris tillgänglig hos Asaad Food
+                </figcaption>
+              </figure>
             )}
           </div>
         </section>
