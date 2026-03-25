@@ -6,14 +6,14 @@ Detta är en fullstack javascript projekt för en B2B handelhemsida som använde
 
 ## Funktionalitet
 
-## Backend-lösning erbjuder följande funktioner och testas med POSTMAN:
-### Produkter
+### Backend-lösning erbjuder följande funktioner och testas med POSTMAN:
+#### Produkter
 * Lista av alla produkter
 * Hämta enstaka produkt
 * Skapa ny produkt
 * Ändra produkt
 * Ta bort produkt
-### Användare
+#### Användare
 * Registrera användare
 * Logga in användare
 * Hämta och hantera alla användare
@@ -24,21 +24,21 @@ Detta är en fullstack javascript projekt för en B2B handelhemsida som använde
 * Uppdatera åtkomsttoken
 * Uppdatera användar information
 * Logga ut
-### Ordrar
+#### Ordrar
 * Skapa en beställning
 * Hämta alla ordrar - ej tillagd i frontend
 * Hämta specifik order - ej tillagd i frontend
-### Meddelande
+#### Meddelande
 * Skapa och skicka meddelande
 
-### Produkt
+#### Produkt
 * POST /api/product/ - Skapa produkt
 * GET /api/product/ - Hämta alla produkter
 * GET /api/product/:id - Hämta specifik produkt
 * PUT /api/product/:id - Uppdatera produkt
 * DELETE /api/product/:id - Ta bort produkt
 
-### Användare
+#### Användare
 * POST /api/register - Registrera
 * POST /api/login - Logga in
 * GET /api/users - Hämta alla användare
@@ -50,12 +50,12 @@ Detta är en fullstack javascript projekt för en B2B handelhemsida som använde
 * POST /api/refresh - uppdatera åtkomsttoken
 * POST /api/logout - logga ut
 
-### Ordrar
+#### Ordrar
 * POST /api/ - Skapa order
 * GET /api/ - Hämta alla ordrar - ej tillag i frontend
 * GET /api/:orderId - hämta specifik order - ej tillagd i frontend
 
-### Meddelande
+#### Meddelande
 * POST /api/ - Skapa & skicka meddelande
 
 # Installation
@@ -94,8 +94,8 @@ Servern bör nu vara igång på http://localhost:din_PORT/.
 Bilder som används i detta projekt har hämtats från www.google.se sökt på Basso(logo, produkt & reklam), Mahmood rice(logo & reklam), Double Kangaroo(logo), Sevimli(logo) & SmartChef(logo). Se till att ge korrekt kredit och följa licensvillkor för dessa resurser.
 
 ## Teknologier
-Projektet användar följande teknologier:
-### Backend : Node.js, Express, Javascript
-### Frontend : Javascript, React, Tailwind CSS, ShadCn
-### Databas : MongoDB
-### Utvecklingsmiljö: Visual Studio Code
+### Projektet användar följande teknologier:
+#### Backend : Node.js, Express, Javascript
+#### Frontend : Javascript, React, Tailwind CSS, ShadCn
+#### Databas : MongoDB
+#### Utvecklingsmiljö: Visual Studio Code
