@@ -142,6 +142,15 @@ const ShoppingCart = ({ setIsOpen, isCheckoutPage }) => {
           <div
             className={
               isCheckout
+                ? "flex justify-between p-2 border-b border-black" // border-b border-black
+                : "flex gap-2"
+            }
+          >
+            <dt className="">{isCheckout ? "Exklusive frakt" : "Exkl. frakt"} </dt>
+          </div>
+          <div
+            className={
+              isCheckout
                 ? "flex justify-between p-2" // border-b border-black
                 : "flex gap-2"
             }
