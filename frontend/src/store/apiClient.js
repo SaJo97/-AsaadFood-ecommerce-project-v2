@@ -2,7 +2,8 @@ import axios from "axios";
 
 const port = import.meta.env.VITE_PORT;
 const BASE_URL =
-  import.meta.env.MODE === "development" ? `http://localhost:${port}/` : "/";
+  import.meta.env.MODE === "development" ? `http://localhost:${port}` 
+  : "https://api.asaadfood.se";
 
 const apiClient = axios.create({
   baseURL: BASE_URL,

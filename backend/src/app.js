@@ -17,6 +17,10 @@ app.use(cookieParser());
 app.use(express.json())
 
 // Middleware to enable Cross-Origin Resource Sharing (CORS)
+// app.use(cors({ // lägga till och ändra till domain namnet
+//     origin: "http://localhost:5173", 
+//     credentials: true,
+//   }))
 app.use(cors())
 
 // Define routes for different API endpoints

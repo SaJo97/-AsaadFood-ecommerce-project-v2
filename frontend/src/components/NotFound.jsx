@@ -1,4 +1,12 @@
+import { useEffect } from "react"
+import { useNavigate } from "react-router"
+
 const NotFound = () => {
+  const navigate = useNavigate()
+  useEffect(() => {
+    navigate("/")
+  })
+  
   return (
     <div className="flex flex-col items-center text-center font-roboto text-[24px] p-10">
       <h1>404 - Hittades inte</h1>
