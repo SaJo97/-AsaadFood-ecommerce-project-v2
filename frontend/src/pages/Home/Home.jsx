@@ -7,7 +7,7 @@ const Home = () => {
       <div className="w-full max-w-250">
         <HomeSlider />
       </div>
-      <section className="w-full max-w-250 mx-auto px-6 py-2 md:text-xl leading-relaxed text-center border border-[#1E5BCC]">
+      <section className="w-full max-w-250 mx-auto px-6 py-2 md:text-xl 2xl:text-[24px] leading-relaxed text-center border border-[#1E5BCC]">
         <h1 className="md:text-3xl text-lg font-bold mb-4 font-crimsontext">
           Grossist och Importör av Premium Ris & Olivolja för Företag i Sverige
         </h1>

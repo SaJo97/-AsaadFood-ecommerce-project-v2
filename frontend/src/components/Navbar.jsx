@@ -83,13 +83,13 @@ const Navbar = () => {
         {/* Desktop Nav */}
         <div className="hidden lg:flex lg:relative">
           <ul
-            className="flex gap-2.5 text-[16px] xl:text-[18px] xl:gap-4"
+            className="flex gap-2.5 text-[16px] xl:text-[18px] 2xl:text-[24px] xl:gap-4"
             role="menubar"
           >
             <li className="relative">
               <button
                 onClick={() => setIsProductsOpen((prev) => !prev)}
-                className="flex items-center gap-1 hover:text-gray-600"
+                className="flex items-center gap-1 hover:text-gray-600 cursor-pointer"
                 aria-haspopup="true"
                 aria-expanded={isProductsOpen}
                 aria-label="Visa produktmeny"
@@ -109,20 +109,22 @@ const Navbar = () => {
                   aria-label="Produktkategorier"
                 >
                   <NavLink
+                    className="hover:bg-gray-100 w-full"
                     to="produkt_ris"
                     onClick={() => handleNavClick(closeAll)}
                     role="menuitem"
                   >
-                    <li className="px-11 py-2 hover:bg-gray-100 cursor-pointer">
+                    <li className="text-center px-2 py-2 cursor-pointer">
                       Ris
                     </li>
                   </NavLink>
                   <NavLink
+                    className="hover:bg-gray-100 w-full"
                     to="produkt_olivolja"
                     onClick={() => handleNavClick(closeAll)}
                     role="menuitem"
                   >
-                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    <li className="text-center px-2 py-2 cursor-pointer">
                       Olivolja
                     </li>
                   </NavLink>
@@ -131,6 +133,7 @@ const Navbar = () => {
             </li>
             <li role="none">
               <NavLink
+                className="hover:text-gray-600"
                 to="om-oss"
                 onClick={() => handleNavClick(closeAll)}
                 role="menuitem"
@@ -140,6 +143,7 @@ const Navbar = () => {
             </li>
             <li role="none">
               <NavLink
+                className="hover:text-gray-600"
                 to="kontakta-oss"
                 onClick={() => handleNavClick(closeAll)}
                 role="menuitem"
@@ -154,6 +158,7 @@ const Navbar = () => {
                 rel="noopener noreferrer"
                 onClick={() => handleNavClick(closeAll)}
                 role="menuitem"
+                className="hover:text-gray-600"
               >
                 Till mahmoodrice.com
               </a>
@@ -173,7 +178,7 @@ const Navbar = () => {
                   {/* render Dropdown based on kassa status */}
                   {!isCheckout ? (
                     <Dropdown aria-label="Visa varukorg">
-                      <FaShoppingCart className="text-2xl cursor-pointer" />
+                      <FaShoppingCart className="text-2xl cursor-pointer hover:text-gray-600" />
                     </Dropdown>
                   ) : (
                     // On kassa, show a static cart icon (no dropdown)
@@ -190,6 +195,7 @@ const Navbar = () => {
                     onClick={() => handleNavClick(closeAll)}
                     role="menuitem"
                     aria-label="Konto"
+                    className="hover:text-gray-600"
                   >
                     <FaRegUserCircle className="text-2xl" />
                   </NavLink>
@@ -198,6 +204,7 @@ const Navbar = () => {
             ) : (
               <li role="none">
                 <NavLink
+                  className="hover:text-gray-600"
                   to="auth/logga-in"
                   onClick={() => handleNavClick(closeAll)}
                   role="menuitem"
@@ -246,7 +253,7 @@ const Navbar = () => {
                 {!isCheckout ? (
                   <Dropdown>
                     <FaShoppingCart
-                      className="text-2xl cursor-pointer"
+                      className="text-2xl cursor-pointer hover:text-gray-600"
                       onClick={() => handleNavClick(closeAll)}
                     />
                   </Dropdown>
@@ -255,7 +262,7 @@ const Navbar = () => {
                 )}
               </li>
               <li>
-                <NavLink to="/konto" onClick={() => handleNavClick(closeAll)}>
+                <NavLink to="/konto" onClick={() => handleNavClick(closeAll)} className="hover:text-gray-600">
                   <FaRegUserCircle className="text-2xl" />
                 </NavLink>
               </li>
@@ -263,6 +270,7 @@ const Navbar = () => {
           ) : (
             <li>
               <NavLink
+                className="hover:text-gray-600"
                 to="auth/logga-in"
                 onClick={() => handleNavClick(closeAll)}
               >
@@ -305,7 +313,7 @@ const Navbar = () => {
                 >
                   <li
                     role="none"
-                    className="px-11 py-2 hover:bg-gray-100 cursor-pointer"
+                    className="hover:bg-gray-100 w-full px-2 py-2 cursor-pointer text-center"
                   >
                     <NavLink
                       to="produkt_ris"
@@ -317,7 +325,7 @@ const Navbar = () => {
                   </li>
                   <li
                     role="none"
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    className="hover:bg-gray-100 w-full px-2 py-2 cursor-pointer text-center"
                   >
                     <NavLink
                       to="produkt_olivolja"
