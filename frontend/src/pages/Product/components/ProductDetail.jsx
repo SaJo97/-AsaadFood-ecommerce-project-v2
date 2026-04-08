@@ -94,7 +94,7 @@ const ProductDetail = ({ product, onClose }) => {
                   e.stopPropagation();
                   setPriceType("unit");
                 }}
-                className={`px-2 py-1 rounded-md border transition-colors duration-200 ${
+                className={`px-2 py-1 rounded-md border transition-colors duration-200 cursor-pointer ${
                   priceType === "unit"
                     ? "bg-[#1E5BCC] text-white border-[#1E5BCC]"
                     : "bg-white text-[#1E5BCC] border-[#1E5BCC] hover:bg-[#E0E7FF]"
@@ -110,7 +110,7 @@ const ProductDetail = ({ product, onClose }) => {
                   e.stopPropagation();
                   setPriceType("pallet");
                 }}
-                className={`px-2 py-1 rounded-md border transition-colors duration-200 ${
+                className={`px-2 py-1 rounded-md border transition-colors duration-200 cursor-pointer ${
                   priceType === "pallet"
                     ? "bg-[#1E5BCC] text-white border-[#1E5BCC]"
                     : "bg-white text-[#1E5BCC] border-[#1E5BCC] hover:bg-[#E0E7FF]"

@@ -26,7 +26,7 @@ const FilterProducts = ({ brands, selectedBrand, onSelectBrand }) => {
               aria-pressed={isActive}
               className={`
               px-1 whitespace-nowrap text-[16px] md:text-[20px] font-crimsontext
-              transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#1E5BCC]
+              transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#1E5BCC] cursor-pointer
               ${
                 isActive
                   ? "bg-[#1E5BCC] text-white"

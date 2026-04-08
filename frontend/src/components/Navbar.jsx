@@ -83,13 +83,13 @@ const Navbar = () => {
         {/* Desktop Nav */}
         <div className="hidden lg:flex lg:relative">
           <ul
-            className="flex gap-2.5 text-[16px] xl:text-[18px] 2xl:text-[24px] xl:gap-4"
+            className="flex gap-2.5 text-[16px] xl:text-[18px] 2xl:text-[21px] xl:gap-4"
             role="menubar"
           >
             <li className="relative">
               <button
                 onClick={() => setIsProductsOpen((prev) => !prev)}
-                className="flex items-center gap-1 hover:text-gray-600 cursor-pointer"
+                className="flex items-center gap-1 hover:text-white hover:bg-[#1E5BCC] px-1 cursor-pointer"
                 aria-haspopup="true"
                 aria-expanded={isProductsOpen}
                 aria-label="Visa produktmeny"
@@ -109,7 +109,7 @@ const Navbar = () => {
                   aria-label="Produktkategorier"
                 >
                   <NavLink
-                    className="hover:bg-gray-100 w-full"
+                    className="hover:text-white hover:bg-[#1E5BCC] w-full rounded-tr rounded-tl"
                     to="produkt_ris"
                     onClick={() => handleNavClick(closeAll)}
                     role="menuitem"
@@ -119,7 +119,7 @@ const Navbar = () => {
                     </li>
                   </NavLink>
                   <NavLink
-                    className="hover:bg-gray-100 w-full"
+                    className="hover:text-white hover:bg-[#1E5BCC] w-full rounded-bl rounded-br"
                     to="produkt_olivolja"
                     onClick={() => handleNavClick(closeAll)}
                     role="menuitem"
@@ -133,7 +133,7 @@ const Navbar = () => {
             </li>
             <li role="none">
               <NavLink
-                className="hover:text-gray-600"
+                className="hover:text-white hover:bg-[#1E5BCC] px-1"
                 to="om-oss"
                 onClick={() => handleNavClick(closeAll)}
                 role="menuitem"
@@ -143,7 +143,7 @@ const Navbar = () => {
             </li>
             <li role="none">
               <NavLink
-                className="hover:text-gray-600"
+                className="hover:text-white hover:bg-[#1E5BCC] px-1"
                 to="kontakta-oss"
                 onClick={() => handleNavClick(closeAll)}
                 role="menuitem"
@@ -158,7 +158,7 @@ const Navbar = () => {
                 rel="noopener noreferrer"
                 onClick={() => handleNavClick(closeAll)}
                 role="menuitem"
-                className="hover:text-gray-600"
+                className="hover:text-white hover:bg-[#1E5BCC] px-1"
               >
                 Till mahmoodrice.com
               </a>
@@ -204,7 +204,7 @@ const Navbar = () => {
             ) : (
               <li role="none">
                 <NavLink
-                  className="hover:text-gray-600"
+                  className="hover:text-white hover:bg-[#1E5BCC] px-1"
                   to="auth/logga-in"
                   onClick={() => handleNavClick(closeAll)}
                   role="menuitem"
@@ -219,7 +219,7 @@ const Navbar = () => {
         <div className="lg:hidden">
           <button
             onClick={() => setIsMenuOpen((prev) => !prev)}
-            className="flex gap-1 outline outline-[#1E5BCC] rounded-full p-1 cursor-pointer"
+            className="flex gap-1 outline outline-[#1E5BCC] rounded-full p-1 cursor-pointer hover:text-white hover:bg-[#1E5BCC]"
             aria-controls="mobile-menu"
             aria-expanded={isMenuOpen}
             aria-label="Meny"
@@ -262,7 +262,11 @@ const Navbar = () => {
                 )}
               </li>
               <li>
-                <NavLink to="/konto" onClick={() => handleNavClick(closeAll)} className="hover:text-gray-600">
+                <NavLink
+                  to="/konto"
+                  onClick={() => handleNavClick(closeAll)}
+                  className="hover:text-gray-600"
+                >
                   <FaRegUserCircle className="text-2xl" />
                 </NavLink>
               </li>
@@ -270,7 +274,7 @@ const Navbar = () => {
           ) : (
             <li>
               <NavLink
-                className="hover:text-gray-600"
+                className="hover:text-white hover:bg-[#1E5BCC] px-1"
                 to="auth/logga-in"
                 onClick={() => handleNavClick(closeAll)}
               >
@@ -296,7 +300,7 @@ const Navbar = () => {
                 aria-haspopup="true"
                 aria-expanded={isProductsOpen}
                 aria-label="Visa produktmeny"
-                className="flex gap-3.5 items-center cursor-pointer"
+                className="flex gap-3.5 items-center cursor-pointer hover:text-[#1E5BCC] hover:underline"
               >
                 <span>Produkter</span>
                 <span>
@@ -313,7 +317,7 @@ const Navbar = () => {
                 >
                   <li
                     role="none"
-                    className="hover:bg-gray-100 w-full px-2 py-2 cursor-pointer text-center"
+                    className="hover:text-white hover:bg-[#1E5BCC] rounded-tr rounded-tl w-full px-2 py-2 cursor-pointer text-center"
                   >
                     <NavLink
                       to="produkt_ris"
@@ -325,7 +329,7 @@ const Navbar = () => {
                   </li>
                   <li
                     role="none"
-                    className="hover:bg-gray-100 w-full px-2 py-2 cursor-pointer text-center"
+                    className="hover:text-white hover:bg-[#1E5BCC] rounded-br rounded-bl w-full px-2 py-2 cursor-pointer text-center"
                   >
                     <NavLink
                       to="produkt_olivolja"
@@ -340,6 +344,7 @@ const Navbar = () => {
             </li>
             <li role="none">
               <NavLink
+                className="hover:text-[#1E5BCC] hover:underline"
                 to="om-oss"
                 onClick={() => handleNavClick(closeAll)}
                 role="menuitem"
@@ -349,6 +354,7 @@ const Navbar = () => {
             </li>
             <li role="none">
               <NavLink
+                className="hover:text-[#1E5BCC] hover:underline"
                 to="kontakta-oss"
                 onClick={() => handleNavClick(closeAll)}
                 role="menuitem"
@@ -363,6 +369,7 @@ const Navbar = () => {
                 rel="noopener noreferrer"
                 onClick={() => handleNavClick(closeAll)}
                 role="menuitem"
+                className="hover:text-[#1E5BCC] hover:underline"
               >
                 Till mahmoodrice.com
               </a>
